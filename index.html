@@ -5,28 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#020617">
     <meta name="description" content="Consulta y guarda offline los horarios de apagones de Cienfuegos.">
-    <title>Apagonía | Horarios de Cienfuegos</title>
+    <title>Apagonía CFG | Horarios de Cienfuegos</title>
     <link rel="icon" type="image/png" href="images.png">
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(async function (OneSignal) {
+            try {
+                await OneSignal.init({
+                    appId: 'a5e2e4bf-ec0d-4aeb-a661-ff8a346575a0',
+                    serviceWorkerPath: './service-worker.js',
+                    serviceWorkerParam: { scope: './' }
+                });
+                window.apagoniaOneSignal = OneSignal;
+                window.dispatchEvent(new Event('onesignal-ready'));
+            } catch (error) {
+                console.error('No se pudo inicializar OneSignal:', error);
+                window.apagoniaOneSignalError = true;
+                window.dispatchEvent(new Event('onesignal-error'));
+            }
+        });
+    </script>
 </head>
 <body>
     <div class="bg-glow" aria-hidden="true"></div>
+    <div id="update-banner" class="update-banner" hidden role="status">
+        <span>Hay una nueva versión de Apagonía.</span>
+        <a id="update-link" href="#" target="_blank" rel="noopener noreferrer">Actualizar</a>
+        <button id="btn-news" type="button">Ver Novedades</button>
+    </div>
 
     <main>
         <section id="view-cover" class="view active" aria-labelledby="app-title">
             <div class="cover-content">
                 <div class="icon-bolt" aria-hidden="true">⚡</div>
-                <h1 id="app-title" class="gradient-text">Apagonía</h1>
+                <h1 id="app-title" class="gradient-text">Apagonía CFG</h1>
                 <p class="subtitle">Horarios de apagones · Cienfuegos</p>
                 <p id="cover-data-status" class="data-status" role="status">Preparando datos…</p>
-                <p class="schedule-disclaimer">Confirma la vigencia del cronograma con el proveedor; la descarga reciente no garantiza que el horario haya cambiado.</p>
                 <div class="circuit-grid" aria-label="Selecciona tu circuito">
-                    <button class="circuit-btn" data-circuit="405">C-405</button>
-                    <button class="circuit-btn" data-circuit="406">C-406</button>
-                    <button class="circuit-btn" data-circuit="407">C-407</button>
-                    <button class="circuit-btn" data-circuit="91">C-91</button>
+                    <button class="circuit-btn" data-circuit="405" type="button">C-405</button>
+                    <button class="circuit-btn" data-circuit="406" type="button">C-406</button>
+                    <button class="circuit-btn" data-circuit="407" type="button">C-407</button>
+                    <button class="circuit-btn" data-circuit="91" type="button">C-91</button>
                 </div>
+                <a id="cover-telegram" class="telegram-link" href="#" target="_blank" rel="noopener noreferrer" hidden>💬 Únete a Telegram</a>
+                <a id="link-legal-cover" class="legal-link" href="#modal-legal">Aviso legal y condiciones</a>
             </div>
         </section>
 
@@ -36,17 +61,15 @@
                     <button class="btn-icon" id="btn-back" type="button" aria-label="Cambiar circuito" title="Cambiar circuito">←</button>
                     <h2>Circuito <span id="current-circuit">405</span></h2>
                     <button class="btn-icon" id="btn-refresh" type="button" aria-label="Actualizar horarios" title="Actualizar horarios">↻</button>
-                    <button class="btn-icon" id="btn-noti" type="button" aria-label="Configurar recordatorios" title="Configurar recordatorios">🔔</button>
+                    <button class="btn-icon" id="btn-noti" type="button" aria-label="Configurar notificaciones" title="Configurar notificaciones">🔔</button>
+                    <button class="btn-icon" id="btn-settings" type="button" aria-label="Ajustes" title="Ajustes">⚙️</button>
                 </div>
                 <p id="current-month" class="month-label">Cargando horario…</p>
                 <p id="data-status" class="data-status" role="status" aria-live="polite"></p>
-                <p class="schedule-disclaimer">Confirma la vigencia del cronograma con el proveedor antes de planificar.</p>
             </header>
-
             <div id="contenedor-horario">
                 <p class="loader">Cargando horario…</p>
             </div>
-
             <button id="btn-donar" class="fab-donate" type="button">☕ Apoyar</button>
         </section>
     </main>
@@ -56,31 +79,73 @@
             <div class="quote-mark" aria-hidden="true">“</div>
             <p id="frase-texto" class="quote-text"></p>
             <p id="frase-autor" class="quote-author"></p>
-            <button class="btn-primary" type="button" data-close-modal="modal-frase">Cerrar</button>
+            <p id="calendar-status" class="helper-text" role="status" aria-live="polite"></p>
+            <button id="btn-calendar-event" class="btn-primary" type="button">🗓️ Guardar en Google Calendar</button>
+            <button class="btn-secondary" type="button" data-close-modal="modal-frase">Cerrar</button>
         </div>
     </div>
 
-    <div id="modal-config" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="config-title">
+    <div id="modal-recordatorios" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="recordatorios-title">
         <div class="glass-modal">
-            <h3 id="config-title">🔔 Recordatorios</h3>
-            <p class="modal-desc">Elige a qué hora quieres recibir el aviso diario.</p>
-            <label class="setting-row" for="noti-hora">
-                <span>Hora del aviso</span>
-                <input id="noti-hora" type="time" value="07:00">
-            </label>
-            <label class="setting-row" for="noti-frase">
-                <span>Incluir una frase</span>
-                <input id="noti-frase" type="checkbox" checked>
-            </label>
-            <label class="setting-row" for="noti-activa">
-                <span>Activar recordatorio diario</span>
-                <input id="noti-activa" type="checkbox">
-            </label>
-            <p id="noti-ayuda" class="helper-text">
-                El aviso se genera mientras la app está abierta. Para recibirlo con la app cerrada, Median.co debe tener configuradas notificaciones locales.
-            </p>
-            <button id="btn-save-noti" class="btn-primary" type="button">Guardar</button>
-            <button class="btn-secondary" type="button" data-close-modal="modal-config">Cerrar</button>
+            <h3 id="recordatorios-title">🔔 Notificaciones</h3>
+            <p class="modal-desc">Para recibir avisos de Apagonía, activa las notificaciones push y permite los avisos cuando el teléfono lo solicite.</p>
+            <p id="push-status" class="helper-text" role="status" aria-live="polite">Comprobando el estado de las notificaciones…</p>
+            <button id="btn-enable-push" class="btn-primary" type="button">Activar Notificaciones</button>
+            <button id="btn-export-month-push" class="btn-secondary" type="button">Exportar TODO el mes a Google Calendar</button>
+            <button class="btn-secondary" type="button" data-close-modal="modal-recordatorios">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="modal-ajustes" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+        <div class="glass-modal">
+            <h3 id="settings-title">⚙️ Ajustes</h3>
+            <fieldset class="settings-group">
+                <legend>Tema</legend>
+                <label class="setting-row"><span>Oscuro</span><input type="radio" name="theme" value="dark"></label>
+                <label class="setting-row"><span>Claro</span><input type="radio" name="theme" value="light"></label>
+                <label class="setting-row"><span>Alto Contraste</span><input type="radio" name="theme" value="contrast"></label>
+            </fieldset>
+            <fieldset class="settings-group">
+                <legend>Layout</legend>
+                <label class="setting-row"><span>Lista</span><input type="radio" name="layout" value="list"></label>
+                <label class="setting-row"><span>Calendario</span><input type="radio" name="layout" value="calendar"></label>
+            </fieldset>
+            <fieldset class="settings-group">
+                <legend>Información</legend>
+                <button id="btn-legal" class="btn-secondary" type="button" style="margin-top: 0;">📄 Aviso legal y condiciones</button>
+            </fieldset>
+            <button class="btn-secondary" type="button" data-close-modal="modal-ajustes">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="modal-legal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="legal-title">
+        <div class="glass-modal legal-modal">
+            <h3 id="legal-title">📄 Aviso legal y condiciones</h3>
+            <section class="legal-section">
+                <h4>Finalidad</h4>
+                <p>Apagonía CFG es una herramienta informativa para consultar horarios de apagones y planificar actividades. No es un servicio oficial ni sustituye los canales de comunicación de las entidades competentes.</p>
+            </section>
+            <section class="legal-section">
+                <h4>Origen y vigencia de la información</h4>
+                <p>Los horarios se muestran según los datos disponibles en la aplicación, que pueden provenir de terceros. No somos proveedores ni verificadores oficiales de esa información, ni participamos en la planificación o ejecución del servicio eléctrico. Los datos pueden estar incompletos, desactualizados o cambiar sin previo aviso. Confirma siempre el horario por los canales oficiales antes de tomar decisiones.</p>
+            </section>
+            <section class="legal-section">
+                <h4>Alcance de responsabilidad</h4>
+                <p>La aplicación se ofrece con fines informativos y sin garantía de exactitud, disponibilidad o actualización continua. En la medida permitida por la legislación aplicable, sus responsables no asumen responsabilidad por errores u omisiones en los datos, interrupciones del servicio, decisiones tomadas basándose en la aplicación ni daños derivados de su uso. Este aviso no limita derechos que legalmente no puedan excluirse.</p>
+            </section>
+            <section class="legal-section">
+                <h4>Servicios de terceros</h4>
+                <p>Las notificaciones y enlaces a servicios externos dependen de sus respectivos proveedores, condiciones y disponibilidad. Apagonía CFG no controla esos servicios.</p>
+            </section>
+            <button class="btn-secondary" type="button" data-close-modal="modal-legal">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="modal-novedades" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="news-title">
+        <div class="glass-modal">
+            <h3 id="news-title">Novedades</h3>
+            <div id="version-history" class="history-list"></div>
+            <button class="btn-secondary" type="button" data-close-modal="modal-novedades">Cerrar</button>
         </div>
     </div>
 
@@ -98,6 +163,7 @@
                 <p class="donation-label">Escanea el código QR con Transfermóvil</p>
                 <img class="donation-qr" src="qr.jpg" alt="Código QR de Transfermóvil para apoyar el proyecto" width="320" height="320">
             </div>
+            <a id="donation-telegram" class="telegram-link" href="#" target="_blank" rel="noopener noreferrer" hidden>💬 Únete a Telegram</a>
             <button class="btn-secondary" type="button" data-close-modal="modal-donar">Cerrar</button>
         </div>
     </div>

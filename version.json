@@ -1,0 +1,17 @@
+{
+  "latest_version": "1.0.0",
+  "url_apk": "https://github.com/michaelfeito-81/Apagonia/releases",
+  "url_telegram": "https://t.me/ApagoniaCfg",
+  "history": [
+    {
+      "version": "1.0.0",
+      "date": "08/11/2026",
+      "changes": [
+        "Lanzamiento inicial",
+        "Modo Offline",
+        "Google Calendar",
+        "OneSignal"
+      ]
+    }
+  ]
+}

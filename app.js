@@ -1,30 +1,75 @@
+const APP_VERSION = "1.0.0";
 const STORAGE_KEYS = {
     circuit: 'circuitoSeleccionado',
     schedules: 'horariosOffline',
     phrases: 'frasesOffline',
     syncedAt: 'datosSincronizadosEn',
-    notificationEnabled: 'recordatoriosActivos',
-    notificationTime: 'horaRecordatorio',
-    notificationPhrase: 'fraseEnRecordatorio',
-    lastNotification: 'ultimaNotificacion'
+    version: 'versionOffline',
+    theme: 'apagoniaTema',
+    layout: 'apagoniaLayout'
 };
+const MONTHS = {
+    enero: 0, ene: 0, febrero: 1, feb: 1, marzo: 2, mar: 2, abril: 3, abr: 3,
+    mayo: 4, may: 4, junio: 5, jun: 5, julio: 6, jul: 6, agosto: 7, ago: 7,
+    septiembre: 8, setiembre: 8, septiembre: 8, sept: 8, sep: 8,
+    octubre: 9, oct: 9, noviembre: 10, nov: 10, diciembre: 11, dic: 11
+};
+const MONTH_NAMES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+const WEEKDAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
 let horariosData = {};
 let frasesData = {};
+let versionData = null;
 let circuitoActual = localStorage.getItem(STORAGE_KEYS.circuit);
+let eventoSeleccionado = null;
+let fraseSeleccionada = '';
 
 document.addEventListener('DOMContentLoaded', iniciarApp);
 
 async function iniciarApp() {
+    enlazarEventos();
+    aplicarPreferencias();
+    window.addEventListener('onesignal-ready', actualizarEstadoPush);
+    window.addEventListener('onesignal-error', () => {
+        setPushStatus('No se pudo conectar con el servicio de notificaciones. Comprueba tu conexión e inténtalo de nuevo.');
+        document.getElementById('btn-enable-push').disabled = false;
+    });
+    await Promise.all([registrarServiceWorker(), cargarDatosJSON(), cargarVersion()]);
+    renderizarHorarioIfNeeded();
+    if (window.apagoniaOneSignal) actualizarEstadoPush();
+    if (window.apagoniaOneSignalError) {
+        setPushStatus('No se pudo conectar con el servicio de notificaciones. Comprueba tu conexión e inténtalo de nuevo.');
+    }
+}
+
+function enlazarEventos() {
     document.querySelectorAll('[data-circuit]').forEach((button) => {
         button.addEventListener('click', () => selectCircuit(button.dataset.circuit));
     });
     document.getElementById('btn-back').addEventListener('click', logout);
     document.getElementById('btn-refresh').addEventListener('click', actualizarDatos);
-    document.getElementById('btn-noti').addEventListener('click', abrirConfiguracionNotificaciones);
-    document.getElementById('btn-donar').addEventListener('click', () => toggleModal('modal-donar'));
+    document.getElementById('btn-noti').addEventListener('click', abrirRecordatorios);
+    document.getElementById('btn-settings').addEventListener('click', () => {
+        syncPreferenceControls();
+        toggleModal('modal-ajustes', true);
+    });
+    document.getElementById('btn-legal').addEventListener('click', () => toggleModal('modal-legal', true));
+    document.getElementById('link-legal-cover').addEventListener('click', (event) => {
+        event.preventDefault();
+        toggleModal('modal-legal', true);
+    });
+    document.getElementById('btn-donar').addEventListener('click', () => toggleModal('modal-donar', true));
     document.getElementById('btn-copy-card').addEventListener('click', copiarNumeroTarjeta);
-    document.getElementById('btn-save-noti').addEventListener('click', guardarConfiguracionNotificaciones);
+    document.getElementById('btn-enable-push').addEventListener('click', activarNotificacionesPush);
+    document.getElementById('btn-export-month-push').addEventListener('click', exportarMesICS);
+    document.getElementById('btn-calendar-event').addEventListener('click', guardarEventoGoogleCalendar);
+    document.getElementById('btn-news').addEventListener('click', () => toggleModal('modal-novedades', true));
+    document.querySelectorAll('input[name="theme"]').forEach((input) => {
+        input.addEventListener('change', () => guardarPreferencia('theme', input.value));
+    });
+    document.querySelectorAll('input[name="layout"]').forEach((input) => {
+        input.addEventListener('change', () => guardarPreferencia('layout', input.value));
+    });
     document.querySelectorAll('[data-close-modal]').forEach((button) => {
         button.addEventListener('click', () => toggleModal(button.dataset.closeModal, false));
     });
@@ -33,24 +78,13 @@ async function iniciarApp() {
             if (event.target === modal) toggleModal(modal.id, false);
         });
     });
-
-    await registrarServiceWorker();
-    await cargarDatosJSON();
-    configurarEstadoNotificaciones();
-
-    if (circuitoActual) mostrarDashboard();
-    else mostrarCover();
-
-    window.setInterval(comprobarRecordatorio, 30000);
-    document.addEventListener('visibilitychange', () => {
-        if (!document.hidden) comprobarRecordatorio();
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') document.querySelectorAll('.modal-overlay.active').forEach((modal) => toggleModal(modal.id, false));
     });
 }
 
 async function registrarServiceWorker() {
-    if (!('serviceWorker' in navigator)) return;
-    if (!window.isSecureContext) return;
-
+    if (!('serviceWorker' in navigator) || !window.isSecureContext) return;
     try {
         await navigator.serviceWorker.register('./service-worker.js');
     } catch (error) {
@@ -62,12 +96,8 @@ async function registrarServiceWorker() {
 async function obtenerJSON(ruta) {
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 10000);
-
     try {
-        const response = await fetch(new URL(ruta, document.baseURI), {
-            cache: 'no-cache',
-            signal: controller.signal
-        });
+        const response = await fetch(new URL(ruta, document.baseURI), { cache: 'no-cache', signal: controller.signal });
         if (!response.ok) throw new Error(`Error HTTP ${response.status} al cargar ${ruta}`);
         return {
             data: await response.json(),
@@ -89,70 +119,127 @@ async function cargarDatosJSON() {
             obtenerJSON('horarios.json'),
             obtenerJSON('frases.json')
         ]);
-        const horarios = horariosResult.data;
-        const frases = frasesResult.data;
-        if (!datosValidos(horarios, frases)) throw new Error('Los archivos de datos no tienen el formato esperado.');
-
-        horariosData = horarios;
-        frasesData = frases;
+        if (!datosValidos(horariosResult.data, frasesResult.data)) throw new Error('Los archivos JSON no tienen el formato esperado.');
+        horariosData = horariosResult.data;
+        frasesData = frasesResult.data;
         try {
-            localStorage.setItem(STORAGE_KEYS.schedules, JSON.stringify(horarios));
-            localStorage.setItem(STORAGE_KEYS.phrases, JSON.stringify(frases));
-            if (!horariosResult.fromCache && !frasesResult.fromCache) {
-                localStorage.setItem(STORAGE_KEYS.syncedAt, new Date().toISOString());
-            }
+            localStorage.setItem(STORAGE_KEYS.schedules, JSON.stringify(horariosData));
+            localStorage.setItem(STORAGE_KEYS.phrases, JSON.stringify(frasesData));
+            if (!horariosResult.fromCache && !frasesResult.fromCache) localStorage.setItem(STORAGE_KEYS.syncedAt, new Date().toISOString());
         } catch (error) {
             console.error('No se pudieron guardar los datos descargados:', error);
-            setDataStatus('Horario actualizado, pero no se pudo guardar una copia offline en este dispositivo.');
-            return;
         }
         if (horariosResult.fromCache || frasesResult.fromCache || !navigator.onLine) {
-            const fecha = localStorage.getItem(STORAGE_KEYS.syncedAt);
-            const etiquetaFecha = fecha ? ` Última conexión: ${formatearFecha(fecha)}.` : '';
-            setDataStatus(`Sin conexión: usando la copia guardada para este dispositivo.${etiquetaFecha}`);
+            const lastSync = localStorage.getItem(STORAGE_KEYS.syncedAt);
+            setDataStatus(`Sin conexión: usando los datos disponibles.${lastSync ? ` Última descarga: ${formatearFecha(lastSync)}.` : ''}`);
         } else {
             setDataStatus('Datos descargados y guardados para usar sin conexión. Confirma su vigencia con el proveedor.');
         }
     } catch (error) {
-        console.warn('No se pudieron descargar los datos publicados:', error);
-        const horariosGuardados = leerJSONLocal(STORAGE_KEYS.schedules);
-        const frasesGuardadas = leerJSONLocal(STORAGE_KEYS.phrases);
-
-        if (datosValidos(horariosGuardados, frasesGuardadas)) {
-            horariosData = horariosGuardados;
-            frasesData = frasesGuardadas;
-            const fecha = localStorage.getItem(STORAGE_KEYS.syncedAt);
-            const etiquetaFecha = fecha ? ` Última descarga: ${formatearFecha(fecha)}.` : '';
-            setDataStatus(`Sin conexión: usando la última copia guardada.${etiquetaFecha}`);
+        console.warn('No se pudieron descargar los datos publicados; se usará la copia local si existe:', error);
+        const savedSchedules = leerJSONLocal(STORAGE_KEYS.schedules);
+        const savedPhrases = leerJSONLocal(STORAGE_KEYS.phrases);
+        if (datosValidos(savedSchedules, savedPhrases)) {
+            horariosData = savedSchedules;
+            frasesData = savedPhrases;
+            const lastSync = localStorage.getItem(STORAGE_KEYS.syncedAt);
+            setDataStatus(`Sin conexión: usando la última copia guardada.${lastSync ? ` Última descarga: ${formatearFecha(lastSync)}.` : ''}`);
         } else {
             horariosData = {};
             frasesData = {};
-            setDataStatus('No se pudieron cargar los horarios. Abre la app con internet para descargarlos.');
+            setDataStatus('No se pudieron cargar los horarios. Conéctate a internet para descargarlos.');
         }
     }
 }
 
-function leerJSONLocal(clave) {
+async function cargarVersion() {
     try {
-        const valor = localStorage.getItem(clave);
-        return valor ? JSON.parse(valor) : null;
+        const result = await obtenerJSON('version.json');
+        if (!result.data || typeof result.data.latest_version !== 'string' || !Array.isArray(result.data.history)) {
+            throw new Error('version.json no tiene el formato esperado.');
+        }
+        versionData = result.data;
+        try {
+            localStorage.setItem(STORAGE_KEYS.version, JSON.stringify(versionData));
+        } catch (storageError) {
+            console.error('No se pudo guardar version.json para uso offline:', storageError);
+        }
     } catch (error) {
-        console.error(`La copia local "${clave}" no se pudo leer:`, error);
+        console.warn('No se pudo cargar version.json:', error);
+        versionData = leerJSONLocal(STORAGE_KEYS.version);
+    }
+    if (!versionData) return;
+    establecerEnlaceTelegram(versionData.url_telegram);
+    renderizarHistorial(versionData.history);
+    if (compararVersiones(versionData.latest_version, APP_VERSION) > 0 && versionData.url_apk) {
+        document.getElementById('update-link').href = versionData.url_apk;
+        document.getElementById('update-banner').hidden = false;
+    }
+}
+
+function establecerEnlaceTelegram(url) {
+    if (!url) return;
+    ['cover-telegram', 'donation-telegram'].forEach((id) => {
+        const link = document.getElementById(id);
+        link.href = url;
+        link.hidden = false;
+    });
+}
+
+function renderizarHistorial(history) {
+    const container = document.getElementById('version-history');
+    container.replaceChildren();
+    history.forEach((entry) => {
+        const article = document.createElement('article');
+        article.className = 'history-entry';
+        const title = document.createElement('h4');
+        title.textContent = `Versión ${entry.version || '—'}`;
+        article.appendChild(title);
+        if (entry.date) {
+            const date = document.createElement('p');
+            date.textContent = entry.date;
+            article.appendChild(date);
+        }
+        const list = document.createElement('ul');
+        (Array.isArray(entry.changes) ? entry.changes : []).forEach((change) => {
+            const item = document.createElement('li');
+            item.textContent = change;
+            list.appendChild(item);
+        });
+        article.appendChild(list);
+        container.appendChild(article);
+    });
+}
+
+function compararVersiones(left, right) {
+    const parse = (value) => String(value).split('.').map((part) => Number.parseInt(part, 10) || 0);
+    const a = parse(left);
+    const b = parse(right);
+    for (let index = 0; index < Math.max(a.length, b.length); index += 1) {
+        if ((a[index] || 0) !== (b[index] || 0)) return (a[index] || 0) > (b[index] || 0) ? 1 : -1;
+    }
+    return 0;
+}
+
+function leerJSONLocal(key) {
+    try {
+        const value = localStorage.getItem(key);
+        return value ? JSON.parse(value) : null;
+    } catch (error) {
+        console.error(`No se pudo leer la copia local ${key}:`, error);
         return null;
     }
 }
 
-function formatearFecha(fecha) {
-    const valor = new Date(fecha);
-    return Number.isNaN(valor.getTime())
-        ? 'fecha desconocida'
-        : valor.toLocaleString('es-CU', { dateStyle: 'short', timeStyle: 'short' });
+function formatearFecha(value) {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? 'fecha desconocida' : date.toLocaleString('es-CU', { dateStyle: 'short', timeStyle: 'short' });
 }
 
-function setDataStatus(mensaje) {
+function setDataStatus(message) {
     ['cover-data-status', 'data-status'].forEach((id) => {
-        const elemento = document.getElementById(id);
-        if (elemento) elemento.textContent = mensaje;
+        const element = document.getElementById(id);
+        if (element) element.textContent = message;
     });
 }
 
@@ -161,7 +248,7 @@ async function actualizarDatos() {
     button.disabled = true;
     button.classList.add('spinning');
     await cargarDatosJSON();
-    if (circuitoActual) renderizarHorario();
+    renderizarHorarioIfNeeded();
     button.disabled = false;
     button.classList.remove('spinning');
 }
@@ -178,6 +265,11 @@ function mostrarDashboard() {
     renderizarHorario();
 }
 
+function renderizarHorarioIfNeeded() {
+    if (circuitoActual) mostrarDashboard();
+    else mostrarCover();
+}
+
 function selectCircuit(id) {
     circuitoActual = id;
     localStorage.setItem(STORAGE_KEYS.circuit, id);
@@ -191,65 +283,128 @@ function logout() {
 }
 
 function renderizarHorario() {
-    const contenedor = document.getElementById('contenedor-horario');
-    const dataCircuito = horariosData[circuitoActual];
-
-    if (!dataCircuito || !Array.isArray(dataCircuito.semanas)) {
+    const container = document.getElementById('contenedor-horario');
+    const circuit = horariosData[circuitoActual];
+    if (!circuit || !Array.isArray(circuit.semanas)) {
         document.getElementById('current-month').textContent = 'Horario no disponible';
-        contenedor.innerHTML = '<p class="empty-state">No hay datos para este circuito en la copia disponible. Actualiza con internet o revisa el circuito elegido.</p>';
+        container.innerHTML = '<p class="empty-state">No hay datos para este circuito en la copia disponible. Actualiza con internet o revisa el circuito elegido.</p>';
         return;
     }
-
-    document.getElementById('current-month').textContent = dataCircuito.mes || 'Horario publicado';
-    const fragment = document.createDocumentFragment();
-
-    dataCircuito.semanas.forEach((semana) => {
-        const tarjeta = document.createElement('section');
-        tarjeta.className = 'week-card';
-        const titulo = document.createElement('h3');
-        titulo.className = 'week-title';
-        titulo.textContent = semana.titulo || 'Semana';
-        tarjeta.appendChild(titulo);
-
-        (Array.isArray(semana.dias) ? semana.dias : []).forEach((dia) => {
-            const fila = document.createElement('div');
-            fila.className = 'day-row';
-            const fecha = document.createElement('p');
-            fecha.className = 'date-label';
-            fecha.textContent = dia.fecha || 'Día';
-            fila.appendChild(fecha);
-
-            const barra = document.createElement('div');
-            barra.className = 'bar-container';
-            (Array.isArray(dia.bloques) ? dia.bloques : []).forEach((bloque) => {
-                const estado = ['luz', 'apagon', 'milagro'].includes(bloque.estado) ? bloque.estado : 'apagon';
-                const segmento = document.createElement('button');
-                segmento.type = 'button';
-                segmento.className = `segment ${estado}`;
-                segmento.dataset.estado = estado;
-                segmento.addEventListener('click', () => abrirFrase(estado));
-                segmento.append(document.createTextNode(bloque.hora || 'Horario'));
-
-                const etiqueta = document.createElement('span');
-                etiqueta.textContent = estado === 'luz' ? 'Luz' : estado === 'apagon' ? 'Apagón' : '24 h';
-                segmento.appendChild(etiqueta);
-                barra.appendChild(segmento);
-            });
-            fila.appendChild(barra);
-            tarjeta.appendChild(fila);
-        });
-        fragment.appendChild(tarjeta);
-    });
-
-    contenedor.replaceChildren(fragment);
+    const now = new Date();
+    document.getElementById('current-month').textContent = `${circuit.mes || 'Horario publicado'} · ${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}`;
+    if (localStorage.getItem(STORAGE_KEYS.layout) === 'calendar') renderizarCalendario(container, circuit);
+    else renderizarLista(container, circuit);
 }
 
-function abrirFrase(tipo) {
-    const lista = frasesData[tipo];
-    if (!Array.isArray(lista) || lista.length === 0) return;
-    const frase = lista[Math.floor(Math.random() * lista.length)];
-    document.getElementById('frase-texto').textContent = `“${frase.texto || ''}”`;
-    document.getElementById('frase-autor').textContent = frase.autor ? `— ${frase.autor}` : '';
+function renderizarLista(container, circuit) {
+    const fragment = document.createDocumentFragment();
+    circuit.semanas.forEach((week) => {
+        const card = document.createElement('section');
+        card.className = 'week-card';
+        const title = document.createElement('h3');
+        title.className = 'week-title';
+        title.textContent = week.titulo || 'Semana';
+        card.appendChild(title);
+        (Array.isArray(week.dias) ? week.dias : []).forEach((day) => {
+            const row = document.createElement('div');
+            row.className = 'day-row';
+            const label = document.createElement('p');
+            label.className = 'date-label';
+            label.textContent = day.fecha || 'Día';
+            row.appendChild(label);
+            const bar = document.createElement('div');
+            bar.className = 'bar-container';
+            (Array.isArray(day.bloques) ? day.bloques : []).forEach((block) => {
+                bar.appendChild(crearBotonBloque(block, day, week.titulo));
+            });
+            row.appendChild(bar);
+            card.appendChild(row);
+        });
+        fragment.appendChild(card);
+    });
+    container.className = '';
+    container.replaceChildren(fragment);
+}
+
+function renderizarCalendario(container, circuit) {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const scheduleByDate = new Map();
+    circuit.semanas.forEach((week) => {
+        (Array.isArray(week.dias) ? week.dias : []).forEach((day) => {
+            const date = obtenerFechaDia(week.titulo || '', day.fecha || '');
+            if (!date || date.getFullYear() !== year || date.getMonth() !== month) return;
+            const key = fechaISO(date);
+            if (!scheduleByDate.has(key)) scheduleByDate.set(key, []);
+            (Array.isArray(day.bloques) ? day.bloques : []).forEach((block) => scheduleByDate.get(key).push({ block, day, title: week.titulo }));
+        });
+    });
+    const wrapper = document.createElement('div');
+    wrapper.className = 'layout-calendar';
+    const grid = document.createElement('div');
+    grid.className = 'calendar-grid';
+    WEEKDAYS.forEach((weekday) => {
+        const header = document.createElement('div');
+        header.className = 'calendar-weekday';
+        header.textContent = weekday;
+        grid.appendChild(header);
+    });
+    const firstDay = new Date(year, month, 1);
+    const offset = (firstDay.getDay() + 6) % 7;
+    for (let index = 0; index < offset; index += 1) {
+        const blank = document.createElement('div');
+        blank.className = 'calendar-cell is-empty';
+        grid.appendChild(blank);
+    }
+    const totalDays = new Date(year, month + 1, 0).getDate();
+    for (let dayNumber = 1; dayNumber <= totalDays; dayNumber += 1) {
+        const date = new Date(year, month, dayNumber);
+        const cell = document.createElement('section');
+        cell.className = 'calendar-cell';
+        const number = document.createElement('p');
+        number.className = 'calendar-day';
+        number.textContent = String(dayNumber);
+        cell.appendChild(number);
+        (scheduleByDate.get(fechaISO(date)) || []).forEach((item) => {
+            const button = crearBotonBloque(item.block, item.day, item.title, true);
+            cell.appendChild(button);
+        });
+        grid.appendChild(cell);
+    }
+    wrapper.appendChild(grid);
+    container.className = '';
+    container.replaceChildren(wrapper);
+}
+
+function crearBotonBloque(block, day, weekTitle, compact = false) {
+    const state = ['luz', 'apagon', 'milagro'].includes(block.estado) ? block.estado : 'apagon';
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `${compact ? 'calendar-block' : 'segment'} ${state}`;
+    const label = state === 'luz' ? 'Luz' : state === 'apagon' ? 'Apagón' : '24 h';
+    button.textContent = compact ? `${block.hora || 'Horario'} · ${label}` : `${block.hora || 'Horario'} ${label}`;
+    button.setAttribute('aria-label', `${day.fecha || 'Día'}, ${block.hora || 'horario'}: ${label}`);
+    button.addEventListener('click', () => abrirFrase(state, { block, day, weekTitle }));
+    return button;
+}
+
+function abrirFrase(type, eventData) {
+    const options = frasesData[type];
+    fraseSeleccionada = '';
+    if (Array.isArray(options) && options.length) {
+        const phrase = options[Math.floor(Math.random() * options.length)];
+        fraseSeleccionada = phrase.autor ? `“${phrase.texto || ''}” — ${phrase.autor}` : `“${phrase.texto || ''}”`;
+        document.getElementById('frase-texto').textContent = `“${phrase.texto || ''}”`;
+        document.getElementById('frase-autor').textContent = phrase.autor ? `— ${phrase.autor}` : '';
+    } else {
+        document.getElementById('frase-texto').textContent = type === 'apagon'
+            ? 'Consulta el horario con frecuencia: puede cambiar según las condiciones del servicio.'
+            : 'Aprovecha este momento y mantente al tanto de las actualizaciones.';
+        document.getElementById('frase-autor').textContent = '';
+    }
+    eventoSeleccionado = eventData;
+    document.getElementById('calendar-status').textContent = '';
     toggleModal('modal-frase', true);
 }
 
@@ -258,191 +413,269 @@ function toggleModal(id, visible) {
     if (modal) modal.classList.toggle('active', visible === undefined ? !modal.classList.contains('active') : visible);
 }
 
-async function copiarNumeroTarjeta() {
-    const numero = document.getElementById('donation-card-number').textContent.trim();
-    const estado = document.getElementById('copy-status');
-    const boton = document.getElementById('btn-copy-card');
+function aplicarPreferencias() {
+    const theme = localStorage.getItem(STORAGE_KEYS.theme) || 'dark';
+    const layout = localStorage.getItem(STORAGE_KEYS.layout) || 'list';
+    document.documentElement.dataset.theme = ['dark', 'light', 'contrast'].includes(theme) ? theme : 'dark';
+    syncPreferenceControls(theme, layout);
+}
 
+function syncPreferenceControls(theme = localStorage.getItem(STORAGE_KEYS.theme) || 'dark', layout = localStorage.getItem(STORAGE_KEYS.layout) || 'list') {
+    document.querySelectorAll('input[name="theme"]').forEach((input) => { input.checked = input.value === theme; });
+    document.querySelectorAll('input[name="layout"]').forEach((input) => { input.checked = input.value === layout; });
+}
+
+function guardarPreferencia(kind, value) {
+    if (kind === 'theme') {
+        if (!['dark', 'light', 'contrast'].includes(value)) return;
+        localStorage.setItem(STORAGE_KEYS.theme, value);
+        document.documentElement.dataset.theme = value;
+    } else {
+        if (!['list', 'calendar'].includes(value)) return;
+        localStorage.setItem(STORAGE_KEYS.layout, value);
+        if (circuitoActual) renderizarHorario();
+    }
+}
+
+function abrirRecordatorios() {
+    actualizarEstadoPush();
+    toggleModal('modal-recordatorios', true);
+}
+
+function actualizarEstadoPush() {
+    const oneSignal = window.apagoniaOneSignal;
+    const button = document.getElementById('btn-enable-push');
+    if (!oneSignal) {
+        setPushStatus('Las notificaciones push no están disponibles todavía. Comprueba tu conexión y vuelve a intentarlo.');
+        button.textContent = 'Activar Notificaciones';
+        return;
+    }
+    const enabled = oneSignal.Notifications.permission === true;
+    button.textContent = enabled ? 'Notificaciones Activadas ✅' : 'Activar Notificaciones';
+    setPushStatus(enabled
+        ? 'Las notificaciones están activadas en este dispositivo.'
+        : 'Para recibir avisos, permite las notificaciones push cuando el teléfono lo solicite.');
+}
+
+function setPushStatus(message) {
+    const element = document.getElementById('push-status');
+    if (element) element.textContent = message;
+}
+
+function activarNotificacionesPush() {
+    const button = document.getElementById('btn-enable-push');
+    if (window.apagoniaOneSignalError) {
+        setPushStatus('No se pudo conectar con el servicio de notificaciones. Comprueba tu conexión e inténtalo de nuevo.');
+        return;
+    }
+    button.disabled = true;
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(async (oneSignal) => {
+        try {
+            if (oneSignal.Notifications.permission === true) {
+                setPushStatus('Las notificaciones ya están activadas ✅');
+                button.textContent = 'Notificaciones Activadas ✅';
+                return;
+            }
+            await oneSignal.Notifications.requestPermission();
+            actualizarEstadoPush();
+            if (oneSignal.Notifications.permission !== true) {
+                setPushStatus('No se activaron las notificaciones. Revisa los permisos del navegador o del teléfono.');
+            }
+        } catch (error) {
+            console.error('No se pudo solicitar permiso para las notificaciones push:', error);
+            setPushStatus('No se pudo activar el permiso. Comprueba la conexión y los ajustes de notificaciones del dispositivo.');
+        } finally {
+            button.disabled = false;
+        }
+    });
+}
+
+async function copiarNumeroTarjeta() {
+    const number = document.getElementById('donation-card-number').textContent.trim();
+    const status = document.getElementById('copy-status');
+    const button = document.getElementById('btn-copy-card');
     try {
         if (navigator.clipboard && window.isSecureContext) {
-            await navigator.clipboard.writeText(numero);
+            await navigator.clipboard.writeText(number);
         } else {
-            const campo = document.createElement('textarea');
-            campo.value = numero;
-            campo.setAttribute('readonly', '');
-            campo.style.position = 'fixed';
-            campo.style.opacity = '0';
-            document.body.appendChild(campo);
-            campo.select();
-            const copiado = document.execCommand('copy');
-            campo.remove();
-            if (!copiado) throw new Error('El dispositivo no permitió copiar el número.');
+            const field = document.createElement('textarea');
+            field.value = number;
+            field.setAttribute('readonly', '');
+            field.style.position = 'fixed';
+            field.style.opacity = '0';
+            document.body.appendChild(field);
+            field.select();
+            const copied = document.execCommand('copy');
+            field.remove();
+            if (!copied) throw new Error('El dispositivo no permitió copiar el número.');
         }
-        estado.textContent = 'Número copiado.';
-        boton.textContent = 'Copiado';
+        status.textContent = 'Número copiado.';
+        button.textContent = 'Copiado';
     } catch (error) {
         console.error('No se pudo copiar el número de tarjeta:', error);
-        estado.textContent = 'No se pudo copiar automáticamente. Mantén pulsado el número para copiarlo.';
-        boton.textContent = 'Reintentar';
+        status.textContent = 'No se pudo copiar automáticamente. Mantén pulsado el número para copiarlo.';
+        button.textContent = 'Reintentar';
     }
 }
 
-function abrirConfiguracionNotificaciones() {
-    document.getElementById('noti-hora').value = localStorage.getItem(STORAGE_KEYS.notificationTime) || '07:00';
-    document.getElementById('noti-frase').checked = localStorage.getItem(STORAGE_KEYS.notificationPhrase) !== 'false';
-    document.getElementById('noti-activa').checked = localStorage.getItem(STORAGE_KEYS.notificationEnabled) === 'true';
-    configurarEstadoNotificaciones();
-    toggleModal('modal-config', true);
+function guardarEventoGoogleCalendar() {
+    if (!eventoSeleccionado) return;
+    const date = obtenerFechaDia(eventoSeleccionado.weekTitle || '', eventoSeleccionado.day.fecha || '');
+    if (!date) {
+        document.getElementById('calendar-status').textContent = 'No se pudo interpretar la fecha de este bloque; revisa el cronograma antes de guardarlo.';
+        return;
+    }
+    const time = obtenerRangoHorario(eventoSeleccionado.block.hora || '');
+    const start = new Date(date);
+    const end = new Date(date);
+    start.setHours(time.startHour, time.startMinute, 0, 0);
+    end.setDate(end.getDate() + time.endDayOffset);
+    end.setHours(time.endHour, time.endMinute, 0, 0);
+    const details = `${fraseSeleccionada ? `${fraseSeleccionada}\n\n` : ''}Circuito C-${circuitoActual}. Estado: ${eventoSeleccionado.block.estado || 'apagón'}. Horario publicado sujeto a cambios.`;
+    const params = new URLSearchParams({
+        action: 'TEMPLATE',
+        text: `Horario de apagón · C-${circuitoActual}`,
+        dates: `${formatoGoogleDate(start)}/${formatoGoogleDate(end)}`,
+        details
+    });
+    window.open(`https://calendar.google.com/calendar/render?${params.toString()}`, '_blank');
 }
 
-async function guardarConfiguracionNotificaciones() {
-    const hora = document.getElementById('noti-hora').value;
-    const activar = document.getElementById('noti-activa').checked;
-    const incluirFrase = document.getElementById('noti-frase').checked;
-
-    if (!hora) {
-        setNotificationStatus('Selecciona una hora válida para el recordatorio.');
+function exportarMesICS() {
+    if (!circuitoActual || !horariosData[circuitoActual]) {
+        setPushStatus('Selecciona un circuito para exportar su cronograma.');
         return;
     }
-    localStorage.setItem(STORAGE_KEYS.notificationTime, hora);
-    localStorage.setItem(STORAGE_KEYS.notificationPhrase, String(incluirFrase));
-
-    if (!activar) {
-        localStorage.setItem(STORAGE_KEYS.notificationEnabled, 'false');
-        configurarEstadoNotificaciones();
-        setNotificationStatus('Recordatorio diario desactivado.');
+    const now = new Date();
+    const events = obtenerEventosMes(now.getFullYear(), now.getMonth())
+        .filter((entry) => entry.block.estado === 'apagon');
+    if (!events.length) {
+        setPushStatus('No hay apagones con fecha concreta para exportar en este mes.');
         return;
     }
-
-    if (!('Notification' in window)) {
-        document.getElementById('noti-activa').checked = false;
-        localStorage.setItem(STORAGE_KEYS.notificationEnabled, 'false');
-        setNotificationStatus('Este navegador o contenedor no ofrece notificaciones web. Configura notificaciones locales en Median.co para avisos con la app cerrada.');
-        return;
-    }
-
-    let permission = Notification.permission;
-    try {
-        if (permission === 'default') permission = await Notification.requestPermission();
-    } catch (error) {
-        document.getElementById('noti-activa').checked = false;
-        localStorage.setItem(STORAGE_KEYS.notificationEnabled, 'false');
-        setNotificationStatus(`No se pudo solicitar permiso para notificar: ${error.message || 'error del navegador'}`);
-        return;
-    }
-    if (permission !== 'granted') {
-        document.getElementById('noti-activa').checked = false;
-        localStorage.setItem(STORAGE_KEYS.notificationEnabled, 'false');
-        setNotificationStatus(permission === 'denied'
-            ? 'Permiso denegado. Habilita las notificaciones en los ajustes del navegador o del teléfono.'
-            : 'No se concedió permiso para las notificaciones.');
-        return;
-    }
-
-    localStorage.setItem(STORAGE_KEYS.notificationEnabled, 'true');
-    configurarEstadoNotificaciones();
-    setNotificationStatus(`Recordatorio activado para las ${hora}. Se enviará cuando la app esté abierta.`);
-    comprobarRecordatorio();
+    const stamp = formatoUTC(new Date());
+    const lines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Apagonia CFG//Horarios de apagones//ES',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH'
+    ];
+    events.forEach((entry, index) => {
+        const range = obtenerRangoHorario(entry.block.hora || '');
+        const start = new Date(entry.date);
+        const end = new Date(entry.date);
+        start.setHours(range.startHour, range.startMinute, 0, 0);
+        end.setDate(end.getDate() + range.endDayOffset);
+        end.setHours(range.endHour, range.endMinute, 0, 0);
+        lines.push(
+            'BEGIN:VEVENT',
+            `UID:${fechaISO(entry.date)}-${circuitoActual}-${index}@apagonia-cfg`,
+            `DTSTAMP:${stamp}`,
+            `DTSTART:${formatoLocalICS(start)}`,
+            `DTEND:${formatoLocalICS(end)}`,
+            `SUMMARY:${escaparICS(`Apagón · C-${circuitoActual}`)}`,
+            `DESCRIPTION:${escaparICS(`${entry.block.hora || 'Horario'} · ${entry.day.fecha || ''}. Confirma la vigencia del cronograma.`)}`,
+            'END:VEVENT'
+        );
+    });
+    lines.push('END:VCALENDAR');
+    const dataUri = `data:text/calendar;charset=utf-8,${encodeURIComponent(lines.join('\r\n'))}`;
+    window.location.href = dataUri;
 }
 
-function configurarEstadoNotificaciones() {
-    const activas = localStorage.getItem(STORAGE_KEYS.notificationEnabled) === 'true';
-    document.getElementById('btn-noti').classList.toggle('is-active', activas);
-}
-
-function setNotificationStatus(mensaje) {
-    document.getElementById('noti-ayuda').textContent = mensaje;
-}
-
-function comprobarRecordatorio() {
-    if (document.hidden || localStorage.getItem(STORAGE_KEYS.notificationEnabled) !== 'true') return;
-    if (!('Notification' in window) || Notification.permission !== 'granted') return;
-
-    const ahora = new Date();
-    const horaElegida = localStorage.getItem(STORAGE_KEYS.notificationTime) || '07:00';
-    const horaActual = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
-    const hoy = `${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, '0')}-${String(ahora.getDate()).padStart(2, '0')}`;
-    if (horaActual < horaElegida || localStorage.getItem(STORAGE_KEYS.lastNotification) === hoy) return;
-
-    localStorage.setItem(STORAGE_KEYS.lastNotification, hoy);
-    enviarNotificacion(`Horario del circuito C-${circuitoActual || 'seleccionado'}`, obtenerMensajeNotificacion(ahora))
-        .catch((error) => {
-            localStorage.removeItem(STORAGE_KEYS.lastNotification);
-            console.error('No se pudo mostrar el recordatorio:', error);
-            setNotificationStatus(`No se pudo mostrar el aviso: ${error.message || 'error de notificación'}`);
+function obtenerEventosMes(year, month) {
+    const circuit = horariosData[circuitoActual];
+    const events = [];
+    if (!circuit || !Array.isArray(circuit.semanas)) return events;
+    circuit.semanas.forEach((week) => {
+        (Array.isArray(week.dias) ? week.dias : []).forEach((day) => {
+            const date = obtenerFechaDia(week.titulo || '', day.fecha || '');
+            if (!date || date.getFullYear() !== year || date.getMonth() !== month) return;
+            (Array.isArray(day.bloques) ? day.bloques : []).forEach((block) => events.push({ date, day, block }));
         });
+    });
+    return events;
 }
 
-function obtenerMensajeNotificacion(fecha) {
-    const partes = [];
-    if (localStorage.getItem(STORAGE_KEYS.notificationPhrase) !== 'false') {
-        const todas = Object.values(frasesData).flatMap((lista) => Array.isArray(lista) ? lista : []);
-        if (todas.length) {
-            const frase = todas[Math.floor(Math.random() * todas.length)];
-            partes.push(frase.autor ? `“${frase.texto}” — ${frase.autor}` : `“${frase.texto}”`);
-        }
+function obtenerFechaDia(weekTitle, dayLabel) {
+    const label = normalizarTexto(dayLabel);
+    const dayMatch = String(dayLabel).match(/\b(\d{1,2})\b/);
+    const title = normalizarTexto(weekTitle);
+    const rangeStart = title.match(/^\s*(\d{1,2})\b/);
+    const dayNumber = Number(dayMatch ? dayMatch[1] : label.includes('toda la semana') && rangeStart ? rangeStart[1] : NaN);
+    if (dayNumber < 1 || dayNumber > 31) return null;
+    const monthMatches = [];
+    Object.entries(MONTHS).forEach(([name, index]) => {
+        const match = new RegExp(`\\b${name}\\b`, 'g');
+        let found;
+        while ((found = match.exec(title))) monthMatches.push({ index, position: found.index });
+    });
+    monthMatches.sort((a, b) => a.position - b.position);
+    const now = new Date();
+    let month = now.getMonth();
+    let year = now.getFullYear();
+    if (monthMatches.length > 1) {
+        const rangeStart = title.match(/(\d{1,2})\s+(?:de\s+)?[a-z]+\s+(?:al|a)\s+(\d{1,2})\s+(?:de\s+)?[a-z]+/);
+        const firstMonth = monthMatches[0];
+        const secondMonth = monthMatches[monthMatches.length - 1];
+        const firstDay = rangeStart ? Number(rangeStart[1]) : 1;
+        month = dayNumber >= firstDay ? firstMonth.index : secondMonth.index;
+    } else if (monthMatches.length === 1) {
+        month = monthMatches[0].index;
+    } else if (title.includes('siguiente') && dayNumber <= 7) {
+        month += 1;
     }
-
-    const bloques = buscarBloquesDeHoy(fecha);
-    if (bloques) {
-        partes.push(`Hoy: ${bloques.map((bloque) => {
-            const estado = bloque.estado === 'luz' ? 'luz' : bloque.estado === 'milagro' ? '24 h de servicio' : 'apagón';
-            return `${bloque.hora} ${estado}`;
-        }).join('; ')}.`);
-    } else {
-        partes.push('Consulta en la app el horario descargado para hoy; los datos pueden cambiar.');
+    if (month > 11) {
+        month -= 12;
+        year += 1;
     }
-    return partes.join(' ');
+    return new Date(year, month, dayNumber);
 }
 
-function buscarBloquesDeHoy(fecha) {
-    const circuito = horariosData[circuitoActual];
-    if (!circuito || !Array.isArray(circuito.semanas)) return null;
-    const numeroDia = String(fecha.getDate());
-    const nombreDia = new Intl.DateTimeFormat('es', { weekday: 'long' }).format(fecha);
-    const mesActual = normalizarTexto(new Intl.DateTimeFormat('es', { month: 'long' }).format(fecha));
+function normalizarTexto(value) {
+    return String(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
 
-    for (const semana of circuito.semanas) {
-        const titulo = normalizarTexto(semana.titulo || '');
-        if (!titulo.includes('del mes') && !tituloIncluyeMes(titulo, mesActual)) continue;
-        for (const dia of semana.dias || []) {
-            const etiqueta = normalizarTexto(dia.fecha || '');
-            const coincideDia = new RegExp(`\\b${numeroDia}\\b`).test(etiqueta);
-            if (coincideDia && etiqueta.includes(normalizarTexto(nombreDia))) return dia.bloques || [];
-        }
+function obtenerRangoHorario(value) {
+    if (/24\s*horas/i.test(value)) return { startHour: 0, startMinute: 0, endHour: 0, endMinute: 0, endDayOffset: 1 };
+    const match = String(value).match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?\s*[-–]\s*(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i);
+    if (!match) return { startHour: 0, startMinute: 0, endHour: 23, endMinute: 59, endDayOffset: 0 };
+    const start = convertirHora(match[1], match[2], match[3]);
+    const end = convertirHora(match[4], match[5], match[6]);
+    let endDayOffset = 0;
+    if (end.hour < start.hour || (end.hour === start.hour && end.minute <= start.minute)) endDayOffset = 1;
+    return { startHour: start.hour, startMinute: start.minute, endHour: end.hour, endMinute: end.minute, endDayOffset };
+}
+
+function convertirHora(hourValue, minuteValue, meridiem) {
+    let hour = Number(hourValue) % 24;
+    const minute = Number(minuteValue || 0);
+    if (meridiem) {
+        const suffix = meridiem.toUpperCase();
+        hour %= 12;
+        if (suffix === 'PM') hour += 12;
     }
-    return null;
+    return { hour, minute };
 }
 
-function tituloIncluyeMes(titulo, mes) {
-    const variantes = {
-        enero: ['enero', 'ene'],
-        febrero: ['febrero', 'feb'],
-        marzo: ['marzo', 'mar'],
-        abril: ['abril', 'abr'],
-        mayo: ['mayo', 'may'],
-        junio: ['junio', 'jun'],
-        julio: ['julio', 'jul'],
-        agosto: ['agosto', 'ago'],
-        septiembre: ['septiembre', 'setiembre', 'sept', 'sep'],
-        octubre: ['octubre', 'oct'],
-        noviembre: ['noviembre', 'nov'],
-        diciembre: ['diciembre', 'dic']
-    };
-    return (variantes[mes] || [mes]).some((variante) => new RegExp(`\\b${variante}\\b`).test(titulo));
+function fechaISO(date) {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
-function normalizarTexto(texto) {
-    return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+function formatoGoogleDate(date) {
+    return `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}T${String(date.getHours()).padStart(2, '0')}${String(date.getMinutes()).padStart(2, '0')}00`;
 }
 
-async function enviarNotificacion(titulo, cuerpo) {
-    if ('serviceWorker' in navigator) {
-        const registro = await navigator.serviceWorker.ready;
-        if (registro.showNotification) {
-            await registro.showNotification(titulo, { body: cuerpo, icon: './images.png', badge: './images.png' });
-            return;
-        }
-    }
-    new Notification(titulo, { body: cuerpo, icon: './images.png' });
+function formatoLocalICS(date) {
+    return formatoGoogleDate(date);
+}
+
+function formatoUTC(date) {
+    return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+}
+
+function escaparICS(value) {
+    return String(value).replace(/\\/g, '\\\\').replace(/\r?\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
 }

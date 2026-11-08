@@ -5,415 +5,86 @@
       {
         "titulo": "14 al 17 de Septiembre (Protección C-407)",
         "dias": [
-          {
-            "fecha": "Lunes 14",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Martes 15",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 16",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 17",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
+          { "fecha": "Lunes 14", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Martes 15", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 16", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 17", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
         ]
       },
       {
         "titulo": "18 al 24 de Septiembre (Protección C-91)",
         "dias": [
-          {
-            "fecha": "Viernes 18",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 19",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Domingo 20",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Lunes 21",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 22",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 23",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 24",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
+          { "fecha": "Viernes 18", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 19", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Domingo 20", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Lunes 21", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 22", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 23", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 24", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
         ]
       },
       {
-        "titulo": "25 Sep al 1 Oct (¡Protección C-405!)",
-        "dias": [
-          {
-            "fecha": "Toda la semana",
-            "bloques": [
-              { "hora": "24 HORAS", "estado": "milagro" }
-            ]
-          }
-        ]
+        "titulo": "25 Sep al 1 Oct (Protección C-405)",
+        "dias": [ { "fecha": "Toda la semana", "bloques": [ { "hora": "24 HORAS", "estado": "milagro" } ] } ]
       },
       {
         "titulo": "2 al 8 de Octubre (Protección C-406)",
         "dias": [
-          {
-            "fecha": "Viernes 2",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Sábado 3",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Domingo 4",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 5",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 6",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 7",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 8",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          }
-        ]
-      },
-      {
-        "titulo": "20 al 26 del mes",
-        "dias": [
-          {
-            "fecha": "Viernes 20",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Sábado 21",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 22",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 23",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 24",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 25",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Jueves 26",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
-        ]
-      },
-      {
-        "titulo": "27 Nov al 3 Dic",
-        "dias": [
-          {
-            "fecha": "Viernes 27",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 28",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 29",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 30",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 1 Dic",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 2 Dic",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 3 Dic",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
+          { "fecha": "Viernes 2", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Sábado 3", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Domingo 4", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 5", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 6", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 7", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 8", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] }
         ]
       },
       {
         "titulo": "13 al 19 del mes",
         "dias": [
-          {
-            "fecha": "Viernes 13",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 14",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 15",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 16",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 17",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 18",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Jueves 19",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
+          { "fecha": "Viernes 13", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 14", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 15", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 16", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 17", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Miércoles 18", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Jueves 19", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
+        ]
+      },
+      {
+        "titulo": "20 al 26 del mes",
+        "dias": [
+          { "fecha": "Viernes 20", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Sábado 21", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 22", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 23", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 24", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 25", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Jueves 26", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
+        ]
+      },
+      {
+        "titulo": "27 del mes al 3 del siguiente",
+        "dias": [
+          { "fecha": "Viernes 27", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 28", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 29", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 30", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 1", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 2", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 3", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
         ]
       },
       {
         "titulo": "06 al 12 del mes",
         "dias": [
-          {
-            "fecha": "Viernes 06",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 07",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Domingo 08",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 09",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 10",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 11",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 12",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          }
+          { "fecha": "Viernes 06", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 07", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Domingo 08", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 09", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 10", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Miércoles 11", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 12", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] }
         ]
       }
     ]
@@ -424,415 +95,86 @@
       {
         "titulo": "14 al 17 de Septiembre (Protección C-407)",
         "dias": [
-          {
-            "fecha": "Lunes 14",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 15",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 16",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 17",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          }
+          { "fecha": "Lunes 14", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 15", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 16", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 17", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] }
         ]
       },
       {
         "titulo": "18 al 24 de Septiembre (Protección C-91)",
         "dias": [
-          {
-            "fecha": "Viernes 18",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Sábado 19",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 20",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 21",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 22",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 23",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Jueves 24",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          }
+          { "fecha": "Viernes 18", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Sábado 19", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 20", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 21", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 22", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 23", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Jueves 24", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] }
         ]
       },
       {
         "titulo": "25 Sep al 1 Oct (Protección C-405)",
         "dias": [
-          {
-            "fecha": "Viernes 25",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 26",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 27",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Lunes 28",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 29",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 30",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 1",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
+          { "fecha": "Viernes 25", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 26", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 27", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Lunes 28", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 29", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 30", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 1", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
         ]
       },
       {
-        "titulo": "2 al 8 de Octubre (¡Protección C-406!)",
+        "titulo": "2 al 8 de Octubre (Protección C-406)",
+        "dias": [ { "fecha": "Toda la semana", "bloques": [ { "hora": "24 HORAS", "estado": "milagro" } ] } ]
+      },
+      {
+        "titulo": "13 al 19 del mes",
         "dias": [
-          {
-            "fecha": "Toda la semana",
-            "bloques": [
-              { "hora": "24 HORAS", "estado": "milagro" }
-            ]
-          }
+          { "fecha": "Viernes 13", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Sábado 14", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Domingo 15", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 16", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 17", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 18", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 19", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] }
         ]
       },
       {
         "titulo": "20 al 26 del mes",
         "dias": [
-          {
-            "fecha": "Viernes 20",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 21",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 22",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 23",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 24",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 25",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 26",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
+          { "fecha": "Viernes 20", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 21", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 22", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Lunes 23", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Martes 24", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 25", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 26", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] }
         ]
       },
       {
-        "titulo": "27 Nov al 3 Dic",
+        "titulo": "27 del mes al 3 del siguiente",
         "dias": [
-          {
-            "fecha": "Viernes 27",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 28",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 29",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 30",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 1 Dic",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 2 Dic",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Jueves 3 Dic",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
-        ]
-      },
-      {
-        "titulo": "13 al 19 del mes",
-        "dias": [
-          {
-            "fecha": "Viernes 13",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Sábado 14",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Domingo 15",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 16",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 17",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 18",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 19",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          }
+          { "fecha": "Viernes 27", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 28", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 29", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 30", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 1", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Miércoles 2", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Jueves 3", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
         ]
       },
       {
         "titulo": "06 al 12 del mes",
         "dias": [
-          {
-            "fecha": "Viernes 06",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 07",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 08",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Lunes 09",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 10",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 11",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Jueves 12",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
+          { "fecha": "Viernes 06", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 07", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 08", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Lunes 09", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 10", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 11", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Jueves 12", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
         ]
       }
     ]
@@ -841,441 +183,91 @@
     "mes": "Cronograma Completo",
     "semanas": [
       {
-        "titulo": "14 al 17 de Septiembre (¡Protección C-407!)",
-        "dias": [
-          {
-            "fecha": "Toda la semana",
-            "bloques": [
-              { "hora": "24 HORAS", "estado": "milagro" }
-            ]
-          }
-        ]
+        "titulo": "14 al 17 de Septiembre (Protección C-407)",
+        "dias": [ { "fecha": "Toda la semana", "bloques": [ { "hora": "24 HORAS", "estado": "milagro" } ] } ]
       },
       {
         "titulo": "18 al 24 de Septiembre (Protección C-91)",
         "dias": [
-          {
-            "fecha": "Viernes 18",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 19",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 20",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 21",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Martes 22",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 23",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 24",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
+          { "fecha": "Viernes 18", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 19", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 20", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 21", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Martes 22", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Miércoles 23", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 24", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
         ]
       },
       {
         "titulo": "25 Sep al 1 Oct (Protección C-405)",
         "dias": [
-          {
-            "fecha": "Viernes 25",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 26",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Domingo 27",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 28",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Martes 29",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 30",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 1",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
+          { "fecha": "Viernes 25", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 26", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Domingo 27", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 28", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Martes 29", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Miércoles 30", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 1", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
         ]
       },
       {
         "titulo": "2 al 8 de Octubre (Protección C-406)",
         "dias": [
-          {
-            "fecha": "Viernes 2",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 3",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 4",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Lunes 5",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Martes 6",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 7",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 8",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
-        ]
-      },
-      {
-        "titulo": "20 al 26 del mes",
-        "dias": [
-          {
-            "fecha": "Viernes 20",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 21",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 22",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Lunes 23",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Martes 24",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 25",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 26",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          }
-        ]
-      },
-      {
-        "titulo": "27 Nov al 3 Dic",
-        "dias": [
-          {
-            "fecha": "Viernes 27",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 28",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Domingo 29",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 30",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 1 Dic",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 2 Dic",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 3 Dic",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          }
+          { "fecha": "Viernes 2", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 3", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 4", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Lunes 5", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Martes 6", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 7", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 8", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
         ]
       },
       {
         "titulo": "13 al 19 del mes",
         "dias": [
-          {
-            "fecha": "Viernes 13",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 14",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 15",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Lunes 16",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Martes 17",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 18",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 19",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
+          { "fecha": "Viernes 13", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 14", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 15", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Lunes 16", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Martes 17", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 18", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 19", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
+        ]
+      },
+      {
+        "titulo": "20 al 26 del mes",
+        "dias": [
+          { "fecha": "Viernes 20", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 21", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 22", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Lunes 23", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Martes 24", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 25", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 26", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] }
+        ]
+      },
+      {
+        "titulo": "27 del mes al 3 del siguiente",
+        "dias": [
+          { "fecha": "Viernes 27", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 28", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Domingo 29", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 30", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 1", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 2", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 3", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] }
         ]
       },
       {
         "titulo": "06 al 12 del mes",
         "dias": [
-          {
-            "fecha": "Viernes 06",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 07",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 08",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 09",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 10",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 11",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 12",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
+          { "fecha": "Viernes 06", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 07", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 08", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 09", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 10", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 11", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 12", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
         ]
       }
     ]
@@ -1286,415 +278,86 @@
       {
         "titulo": "14 al 17 de Septiembre (Protección C-407)",
         "dias": [
-          {
-            "fecha": "Lunes 14",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 15",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 16",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Jueves 17",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
+          { "fecha": "Lunes 14", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 15", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Miércoles 16", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Jueves 17", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
         ]
       },
       {
-        "titulo": "18 al 24 de Septiembre (¡Protección C-91!)",
-        "dias": [
-          {
-            "fecha": "Toda la semana",
-            "bloques": [
-              { "hora": "24 HORAS", "estado": "milagro" }
-            ]
-          }
-        ]
+        "titulo": "18 al 24 de Septiembre (Protección C-91)",
+        "dias": [ { "fecha": "Toda la semana", "bloques": [ { "hora": "24 HORAS", "estado": "milagro" } ] } ]
       },
       {
         "titulo": "25 Sep al 1 Oct (Protección C-405)",
         "dias": [
-          {
-            "fecha": "Viernes 25",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Sábado 26",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 27",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 28",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 29",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 30",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Jueves 1",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          }
+          { "fecha": "Viernes 25", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Sábado 26", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 27", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 28", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 29", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 30", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Jueves 1", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] }
         ]
       },
       {
         "titulo": "2 al 8 de Octubre (Protección C-406)",
         "dias": [
-          {
-            "fecha": "Viernes 2",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 3",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 4",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 5",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 6",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 7",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Jueves 8",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
-        ]
-      },
-      {
-        "titulo": "20 al 26 del mes",
-        "dias": [
-          {
-            "fecha": "Viernes 20",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 21",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Domingo 22",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 23",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 24",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 25",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 26",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
-        ]
-      },
-      {
-        "titulo": "27 Nov al 3 Dic",
-        "dias": [
-          {
-            "fecha": "Viernes 27",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Sábado 28",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 29",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Lunes 30",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Martes 1 Dic",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 2 Dic",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 3 Dic",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
+          { "fecha": "Viernes 2", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 3", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 4", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 5", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 6", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Miércoles 7", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Jueves 8", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
         ]
       },
       {
         "titulo": "13 al 19 del mes",
         "dias": [
-          {
-            "fecha": "Viernes 13",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Sábado 14",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 15",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 16",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Martes 17",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 18",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 19",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
+          { "fecha": "Viernes 13", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 14", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 15", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 16", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 17", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 18", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 19", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
+        ]
+      },
+      {
+        "titulo": "20 al 26 del mes",
+        "dias": [
+          { "fecha": "Viernes 20", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Sábado 21", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Domingo 22", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 23", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 24", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Miércoles 25", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 26", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
+        ]
+      },
+      {
+        "titulo": "27 del mes al 3 del siguiente",
+        "dias": [
+          { "fecha": "Viernes 27", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Sábado 28", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 29", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Lunes 30", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Martes 1", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 2", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 3", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
         ]
       },
       {
         "titulo": "06 al 12 del mes",
         "dias": [
-          {
-            "fecha": "Viernes 06",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Sábado 07",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Domingo 08",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Lunes 09",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "luz" }
-            ]
-          },
-          {
-            "fecha": "Martes 10",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "apagon" },
-              { "hora": "8AM-4PM", "estado": "luz" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Miércoles 11",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          },
-          {
-            "fecha": "Jueves 12",
-            "bloques": [
-              { "hora": "12AM-8AM", "estado": "luz" },
-              { "hora": "8AM-4PM", "estado": "apagon" },
-              { "hora": "4PM-12AM", "estado": "apagon" }
-            ]
-          }
+          { "fecha": "Viernes 06", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Sábado 07", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Domingo 08", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 09", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Martes 10", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Miércoles 11", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 12", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
         ]
       }
     ]
