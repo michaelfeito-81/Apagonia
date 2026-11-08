@@ -1,0 +1,19 @@
+{
+  "name": "Apagonía | Horarios de Cienfuegos",
+  "short_name": "Apagonía",
+  "description": "Horarios de apagones de Cienfuegos, disponibles sin conexión.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "icons": [
+    {
+      "src": "./images.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

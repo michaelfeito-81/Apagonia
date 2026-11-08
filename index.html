@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#020617">
+    <meta name="description" content="Consulta y guarda offline los horarios de apagones de Cienfuegos.">
+    <title>Apagonía | Horarios de Cienfuegos</title>
+    <link rel="icon" type="image/png" href="images.png">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="bg-glow" aria-hidden="true"></div>
+
+    <main>
+        <section id="view-cover" class="view active" aria-labelledby="app-title">
+            <div class="cover-content">
+                <div class="icon-bolt" aria-hidden="true">⚡</div>
+                <h1 id="app-title" class="gradient-text">Apagonía</h1>
+                <p class="subtitle">Horarios de apagones · Cienfuegos</p>
+                <p id="cover-data-status" class="data-status" role="status">Preparando datos…</p>
+                <p class="schedule-disclaimer">Confirma la vigencia del cronograma con el proveedor; la descarga reciente no garantiza que el horario haya cambiado.</p>
+                <div class="circuit-grid" aria-label="Selecciona tu circuito">
+                    <button class="circuit-btn" data-circuit="405">C-405</button>
+                    <button class="circuit-btn" data-circuit="406">C-406</button>
+                    <button class="circuit-btn" data-circuit="407">C-407</button>
+                    <button class="circuit-btn" data-circuit="91">C-91</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-dashboard" class="view" aria-label="Horario del circuito">
+            <header class="dash-header">
+                <div class="header-top">
+                    <button class="btn-icon" id="btn-back" type="button" aria-label="Cambiar circuito" title="Cambiar circuito">←</button>
+                    <h2>Circuito <span id="current-circuit">405</span></h2>
+                    <button class="btn-icon" id="btn-refresh" type="button" aria-label="Actualizar horarios" title="Actualizar horarios">↻</button>
+                    <button class="btn-icon" id="btn-noti" type="button" aria-label="Configurar recordatorios" title="Configurar recordatorios">🔔</button>
+                </div>
+                <p id="current-month" class="month-label">Cargando horario…</p>
+                <p id="data-status" class="data-status" role="status" aria-live="polite"></p>
+                <p class="schedule-disclaimer">Confirma la vigencia del cronograma con el proveedor antes de planificar.</p>
+            </header>
+
+            <div id="contenedor-horario">
+                <p class="loader">Cargando horario…</p>
+            </div>
+
+            <button id="btn-donar" class="fab-donate" type="button">☕ Apoyar</button>
+        </section>
+    </main>
+
+    <div id="modal-frase" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="frase-texto">
+        <div class="glass-modal">
+            <div class="quote-mark" aria-hidden="true">“</div>
+            <p id="frase-texto" class="quote-text"></p>
+            <p id="frase-autor" class="quote-author"></p>
+            <button class="btn-primary" type="button" data-close-modal="modal-frase">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="modal-config" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="config-title">
+        <div class="glass-modal">
+            <h3 id="config-title">🔔 Recordatorios</h3>
+            <p class="modal-desc">Elige a qué hora quieres recibir el aviso diario.</p>
+            <label class="setting-row" for="noti-hora">
+                <span>Hora del aviso</span>
+                <input id="noti-hora" type="time" value="07:00">
+            </label>
+            <label class="setting-row" for="noti-frase">
+                <span>Incluir una frase</span>
+                <input id="noti-frase" type="checkbox" checked>
+            </label>
+            <label class="setting-row" for="noti-activa">
+                <span>Activar recordatorio diario</span>
+                <input id="noti-activa" type="checkbox">
+            </label>
+            <p id="noti-ayuda" class="helper-text">
+                El aviso se genera mientras la app está abierta. Para recibirlo con la app cerrada, Median.co debe tener configuradas notificaciones locales.
+            </p>
+            <button id="btn-save-noti" class="btn-primary" type="button">Guardar</button>
+            <button class="btn-secondary" type="button" data-close-modal="modal-config">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="modal-donar" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="donar-title">
+        <div class="glass-modal">
+            <h3 id="donar-title">☕ Apoya el proyecto</h3>
+            <p class="modal-desc">Tu apoyo ayuda a mantener disponible esta herramienta comunitaria.</p>
+            <div class="donation-details">
+                <p class="donation-label">Transfermóvil · Número de tarjeta</p>
+                <div class="card-copy-row">
+                    <code id="donation-card-number">9204069994080174</code>
+                    <button id="btn-copy-card" class="btn-copy" type="button">Copiar</button>
+                </div>
+                <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
+                <p class="donation-label">Escanea el código QR con Transfermóvil</p>
+                <img class="donation-qr" src="qr.jpg" alt="Código QR de Transfermóvil para apoyar el proyecto" width="320" height="320">
+            </div>
+            <button class="btn-secondary" type="button" data-close-modal="modal-donar">Cerrar</button>
+        </div>
+    </div>
+
+    <script src="app.js" defer></script>
+</body>
+</html>
