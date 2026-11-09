@@ -1,4 +1,4 @@
-const CACHE_NAME = 'apagonia-cfg-v1';
+const CACHE_NAME = 'apagonia-cfg-v4';
 const APP_FILES = [
     './',
     './index.html',

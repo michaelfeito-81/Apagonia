@@ -25,7 +25,7 @@
       },
       {
         "titulo": "25 Sep al 1 Oct (Protección C-405)",
-        "dias": [ { "fecha": "Toda la semana", "bloques": [ { "hora": "24 HORAS", "estado": "milagro" } ] } ]
+        "dias": [ { "fecha": "Toda la semana", "bloques": [ { "hora": "24 HORAS", "estado": "luz" } ] } ]
       },
       {
         "titulo": "2 al 8 de Octubre (Protección C-406)",
@@ -127,7 +127,7 @@
       },
       {
         "titulo": "2 al 8 de Octubre (Protección C-406)",
-        "dias": [ { "fecha": "Toda la semana", "bloques": [ { "hora": "24 HORAS", "estado": "milagro" } ] } ]
+        "dias": [ { "fecha": "Toda la semana", "bloques": [ { "hora": "24 HORAS", "estado": "luz" } ] } ]
       },
       {
         "titulo": "13 al 19 del mes",
@@ -184,7 +184,7 @@
     "semanas": [
       {
         "titulo": "14 al 17 de Septiembre (Protección C-407)",
-        "dias": [ { "fecha": "Toda la semana", "bloques": [ { "hora": "24 HORAS", "estado": "milagro" } ] } ]
+        "dias": [ { "fecha": "Toda la semana", "bloques": [ { "hora": "24 HORAS", "estado": "luz" } ] } ]
       },
       {
         "titulo": "18 al 24 de Septiembre (Protección C-91)",
@@ -286,7 +286,7 @@
       },
       {
         "titulo": "18 al 24 de Septiembre (Protección C-91)",
-        "dias": [ { "fecha": "Toda la semana", "bloques": [ { "hora": "24 HORAS", "estado": "milagro" } ] } ]
+        "dias": [ { "fecha": "Toda la semana", "bloques": [ { "hora": "24 HORAS", "estado": "luz" } ] } ]
       },
       {
         "titulo": "25 Sep al 1 Oct (Protección C-405)",

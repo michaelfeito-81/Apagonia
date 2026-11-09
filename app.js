@@ -17,12 +17,45 @@ const MONTHS = {
 const MONTH_NAMES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 const WEEKDAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
+const memoryStorage = new Map();
+let storageWarningShown = false;
+const storage = {
+    getItem(key) {
+        try {
+            const value = window.localStorage.getItem(key);
+            if (value !== null) memoryStorage.set(key, value);
+            return value;
+        } catch (error) {
+            warnStorageUnavailable(error);
+            return memoryStorage.get(key) || null;
+        }
+    },
+    setItem(key, value) {
+        const stringValue = String(value);
+        memoryStorage.set(key, stringValue);
+        try {
+            window.localStorage.setItem(key, stringValue);
+        } catch (error) {
+            warnStorageUnavailable(error);
+        }
+    },
+    removeItem(key) {
+        memoryStorage.delete(key);
+        try {
+            window.localStorage.removeItem(key);
+        } catch (error) {
+            warnStorageUnavailable(error);
+        }
+    }
+};
+
 let horariosData = {};
 let frasesData = {};
 let versionData = null;
-let circuitoActual = localStorage.getItem(STORAGE_KEYS.circuit);
+let circuitoActual = storage.getItem(STORAGE_KEYS.circuit);
 let eventoSeleccionado = null;
 let fraseSeleccionada = '';
+let datosCargando = true;
 
 document.addEventListener('DOMContentLoaded', iniciarApp);
 
@@ -34,53 +67,87 @@ async function iniciarApp() {
         setPushStatus('No se pudo conectar con el servicio de notificaciones. Comprueba tu conexión e inténtalo de nuevo.');
         document.getElementById('btn-enable-push').disabled = false;
     });
-    await Promise.all([registrarServiceWorker(), cargarDatosJSON(), cargarVersion()]);
+    cargarDatosGuardados();
     renderizarHorarioIfNeeded();
-    if (window.apagoniaOneSignal) actualizarEstadoPush();
-    if (window.apagoniaOneSignalError) {
-        setPushStatus('No se pudo conectar con el servicio de notificaciones. Comprueba tu conexión e inténtalo de nuevo.');
-    }
+    void registrarServiceWorker();
+    void cargarDatosJSON().then(renderizarHorarioIfNeeded);
+    void cargarVersion();
 }
 
 function enlazarEventos() {
-    document.querySelectorAll('[data-circuit]').forEach((button) => {
-        button.addEventListener('click', () => selectCircuit(button.dataset.circuit));
-    });
-    document.getElementById('btn-back').addEventListener('click', logout);
-    document.getElementById('btn-refresh').addEventListener('click', actualizarDatos);
-    document.getElementById('btn-noti').addEventListener('click', abrirRecordatorios);
-    document.getElementById('btn-settings').addEventListener('click', () => {
-        syncPreferenceControls();
-        toggleModal('modal-ajustes', true);
-    });
-    document.getElementById('btn-legal').addEventListener('click', () => toggleModal('modal-legal', true));
-    document.getElementById('link-legal-cover').addEventListener('click', (event) => {
-        event.preventDefault();
-        toggleModal('modal-legal', true);
-    });
-    document.getElementById('btn-donar').addEventListener('click', () => toggleModal('modal-donar', true));
-    document.getElementById('btn-copy-card').addEventListener('click', copiarNumeroTarjeta);
-    document.getElementById('btn-enable-push').addEventListener('click', activarNotificacionesPush);
-    document.getElementById('btn-export-month-push').addEventListener('click', exportarMesICS);
-    document.getElementById('btn-calendar-event').addEventListener('click', guardarEventoGoogleCalendar);
-    document.getElementById('btn-news').addEventListener('click', () => toggleModal('modal-novedades', true));
-    document.querySelectorAll('input[name="theme"]').forEach((input) => {
-        input.addEventListener('change', () => guardarPreferencia('theme', input.value));
-    });
-    document.querySelectorAll('input[name="layout"]').forEach((input) => {
-        input.addEventListener('change', () => guardarPreferencia('layout', input.value));
-    });
-    document.querySelectorAll('[data-close-modal]').forEach((button) => {
-        button.addEventListener('click', () => toggleModal(button.dataset.closeModal, false));
-    });
-    document.querySelectorAll('.modal-overlay').forEach((modal) => {
-        modal.addEventListener('click', (event) => {
-            if (event.target === modal) toggleModal(modal.id, false);
-        });
-    });
+    document.addEventListener('click', manejarClickInterfaz);
+    document.addEventListener('change', manejarCambioInterfaz);
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') document.querySelectorAll('.modal-overlay.active').forEach((modal) => toggleModal(modal.id, false));
     });
+}
+
+function manejarClickInterfaz(event) {
+    const target = event.target instanceof Element ? event.target : null;
+    if (!target) return;
+
+    const closeButton = target.closest('[data-close-modal]');
+    if (closeButton) {
+        toggleModal(closeButton.dataset.closeModal, false);
+        return;
+    }
+
+    const modal = target.closest('.modal-overlay');
+    if (modal && target === modal) {
+        toggleModal(modal.id, false);
+        return;
+    }
+
+    const button = target.closest('button, a');
+    if (!button) return;
+
+    if (button.id === 'link-legal-cover') {
+        event.preventDefault();
+        toggleModal('modal-legal', true);
+        return;
+    }
+    if (button.dataset.circuit) return selectCircuit(button.dataset.circuit);
+    switch (button.id) {
+        case 'btn-back': logout(); break;
+        case 'btn-refresh': void actualizarDatos(); break;
+        case 'btn-noti': abrirRecordatorios(); break;
+        case 'btn-settings':
+            syncPreferenceControls();
+            toggleModal('modal-ajustes', true);
+            break;
+        case 'btn-legal': toggleModal('modal-legal', true); break;
+        case 'btn-donar': toggleModal('modal-donar', true); break;
+        case 'btn-copy-card': void copiarNumeroTarjeta(); break;
+        case 'btn-enable-push': activarNotificacionesPush(); break;
+        case 'btn-export-month-push': exportarMesICS(); break;
+        case 'btn-calendar-event': guardarEventoGoogleCalendar(); break;
+        case 'btn-news': toggleModal('modal-novedades', true); break;
+        default: break;
+    }
+}
+
+function manejarCambioInterfaz(event) {
+    const input = event.target;
+    if (!(input instanceof HTMLInputElement)) return;
+    if (input.name === 'theme') guardarPreferencia('theme', input.value);
+    if (input.name === 'layout') guardarPreferencia('layout', input.value);
+}
+
+function warnStorageUnavailable(error) {
+    if (storageWarningShown) return;
+    storageWarningShown = true;
+    console.warn('El almacenamiento local no está disponible; los datos solo se conservarán mientras la app permanezca abierta.', error);
+    setDataStatus('El almacenamiento del dispositivo no está disponible. Algunos ajustes no se conservarán al cerrar la app.');
+}
+
+function cargarDatosGuardados() {
+    const savedSchedules = leerJSONLocal(STORAGE_KEYS.schedules);
+    const savedPhrases = leerJSONLocal(STORAGE_KEYS.phrases);
+    if (!datosValidos(savedSchedules, savedPhrases)) return;
+    horariosData = savedSchedules;
+    frasesData = savedPhrases;
+    const lastSync = storage.getItem(STORAGE_KEYS.syncedAt);
+    setDataStatus(`Mostrando la última copia guardada${lastSync ? ` (${formatearFecha(lastSync)})` : ''}. Comprobando si hay datos nuevos…`);
 }
 
 async function registrarServiceWorker() {
@@ -123,14 +190,14 @@ async function cargarDatosJSON() {
         horariosData = horariosResult.data;
         frasesData = frasesResult.data;
         try {
-            localStorage.setItem(STORAGE_KEYS.schedules, JSON.stringify(horariosData));
-            localStorage.setItem(STORAGE_KEYS.phrases, JSON.stringify(frasesData));
-            if (!horariosResult.fromCache && !frasesResult.fromCache) localStorage.setItem(STORAGE_KEYS.syncedAt, new Date().toISOString());
+            storage.setItem(STORAGE_KEYS.schedules, JSON.stringify(horariosData));
+            storage.setItem(STORAGE_KEYS.phrases, JSON.stringify(frasesData));
+            if (!horariosResult.fromCache && !frasesResult.fromCache) storage.setItem(STORAGE_KEYS.syncedAt, new Date().toISOString());
         } catch (error) {
             console.error('No se pudieron guardar los datos descargados:', error);
         }
         if (horariosResult.fromCache || frasesResult.fromCache || !navigator.onLine) {
-            const lastSync = localStorage.getItem(STORAGE_KEYS.syncedAt);
+            const lastSync = storage.getItem(STORAGE_KEYS.syncedAt);
             setDataStatus(`Sin conexión: usando los datos disponibles.${lastSync ? ` Última descarga: ${formatearFecha(lastSync)}.` : ''}`);
         } else {
             setDataStatus('Datos descargados y guardados para usar sin conexión. Confirma su vigencia con el proveedor.');
@@ -142,13 +209,15 @@ async function cargarDatosJSON() {
         if (datosValidos(savedSchedules, savedPhrases)) {
             horariosData = savedSchedules;
             frasesData = savedPhrases;
-            const lastSync = localStorage.getItem(STORAGE_KEYS.syncedAt);
+            const lastSync = storage.getItem(STORAGE_KEYS.syncedAt);
             setDataStatus(`Sin conexión: usando la última copia guardada.${lastSync ? ` Última descarga: ${formatearFecha(lastSync)}.` : ''}`);
         } else {
             horariosData = {};
             frasesData = {};
             setDataStatus('No se pudieron cargar los horarios. Conéctate a internet para descargarlos.');
         }
+    } finally {
+        datosCargando = false;
     }
 }
 
@@ -160,7 +229,7 @@ async function cargarVersion() {
         }
         versionData = result.data;
         try {
-            localStorage.setItem(STORAGE_KEYS.version, JSON.stringify(versionData));
+            storage.setItem(STORAGE_KEYS.version, JSON.stringify(versionData));
         } catch (storageError) {
             console.error('No se pudo guardar version.json para uso offline:', storageError);
         }
@@ -223,7 +292,7 @@ function compararVersiones(left, right) {
 
 function leerJSONLocal(key) {
     try {
-        const value = localStorage.getItem(key);
+        const value = storage.getItem(key);
         return value ? JSON.parse(value) : null;
     } catch (error) {
         console.error(`No se pudo leer la copia local ${key}:`, error);
@@ -247,10 +316,13 @@ async function actualizarDatos() {
     const button = document.getElementById('btn-refresh');
     button.disabled = true;
     button.classList.add('spinning');
-    await cargarDatosJSON();
-    renderizarHorarioIfNeeded();
-    button.disabled = false;
-    button.classList.remove('spinning');
+    try {
+        await cargarDatosJSON();
+        renderizarHorarioIfNeeded();
+    } finally {
+        button.disabled = false;
+        button.classList.remove('spinning');
+    }
 }
 
 function mostrarCover() {
@@ -272,12 +344,12 @@ function renderizarHorarioIfNeeded() {
 
 function selectCircuit(id) {
     circuitoActual = id;
-    localStorage.setItem(STORAGE_KEYS.circuit, id);
+    storage.setItem(STORAGE_KEYS.circuit, id);
     mostrarDashboard();
 }
 
 function logout() {
-    localStorage.removeItem(STORAGE_KEYS.circuit);
+    storage.removeItem(STORAGE_KEYS.circuit);
     circuitoActual = null;
     mostrarCover();
 }
@@ -287,12 +359,14 @@ function renderizarHorario() {
     const circuit = horariosData[circuitoActual];
     if (!circuit || !Array.isArray(circuit.semanas)) {
         document.getElementById('current-month').textContent = 'Horario no disponible';
-        container.innerHTML = '<p class="empty-state">No hay datos para este circuito en la copia disponible. Actualiza con internet o revisa el circuito elegido.</p>';
+        container.innerHTML = datosCargando
+            ? '<p class="loader">Cargando horario…</p>'
+            : '<p class="empty-state">No hay datos para este circuito en la copia disponible. Comprueba la conexión o vuelve a intentar con el botón actualizar.</p>';
         return;
     }
     const now = new Date();
     document.getElementById('current-month').textContent = `${circuit.mes || 'Horario publicado'} · ${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}`;
-    if (localStorage.getItem(STORAGE_KEYS.layout) === 'calendar') renderizarCalendario(container, circuit);
+    if (storage.getItem(STORAGE_KEYS.layout) === 'calendar') renderizarCalendario(container, circuit);
     else renderizarLista(container, circuit);
 }
 
@@ -342,6 +416,19 @@ function renderizarCalendario(container, circuit) {
     });
     const wrapper = document.createElement('div');
     wrapper.className = 'layout-calendar';
+    const legend = document.createElement('div');
+    legend.className = 'calendar-legend';
+    [
+        { className: 'luz', label: 'Corriente' },
+        { className: 'apagon', label: 'Apagón' }
+    ].forEach((item) => {
+        const entry = document.createElement('span');
+        const swatch = document.createElement('i');
+        swatch.className = `legend-swatch ${item.className}`;
+        swatch.setAttribute('aria-hidden', 'true');
+        entry.append(swatch, document.createTextNode(item.label));
+        legend.appendChild(entry);
+    });
     const grid = document.createElement('div');
     grid.className = 'calendar-grid';
     WEEKDAYS.forEach((weekday) => {
@@ -372,6 +459,7 @@ function renderizarCalendario(container, circuit) {
         });
         grid.appendChild(cell);
     }
+    wrapper.appendChild(legend);
     wrapper.appendChild(grid);
     container.className = '';
     container.replaceChildren(wrapper);
@@ -382,11 +470,29 @@ function crearBotonBloque(block, day, weekTitle, compact = false) {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = `${compact ? 'calendar-block' : 'segment'} ${state}`;
-    const label = state === 'luz' ? 'Luz' : state === 'apagon' ? 'Apagón' : '24 h';
-    button.textContent = compact ? `${block.hora || 'Horario'} · ${label}` : `${block.hora || 'Horario'} ${label}`;
+    const label = state === 'luz' ? 'Corriente' : state === 'apagon' ? 'Apagón' : 'Servicio 24 h';
+    const marker = state === 'luz' ? '✓' : state === 'apagon' ? '×' : '24h';
+    button.textContent = compact
+        ? formatoHoraCompacto(block.hora || 'Horario')
+        : `${marker} ${block.hora || 'Horario'} · ${label}`;
+    button.title = `${day.fecha || 'Día'} · ${block.hora || 'Horario'}: ${label}`;
     button.setAttribute('aria-label', `${day.fecha || 'Día'}, ${block.hora || 'horario'}: ${label}`);
     button.addEventListener('click', () => abrirFrase(state, { block, day, weekTitle }));
     return button;
+}
+
+function formatoHoraCompacto(hora) {
+    const rango = String(hora).match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?\s*[-–]\s*(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i);
+    if (!rango) return /24\s*horas/i.test(hora) ? '24 h' : hora;
+    const compactarHora = (valor, sufijo) => {
+        let hour = Number(valor) % 24;
+        if (sufijo) {
+            hour %= 12;
+            if (sufijo.toUpperCase() === 'PM') hour += 12;
+        }
+        return String(hour).padStart(2, '0');
+    };
+    return `${compactarHora(rango[1], rango[3])}–${compactarHora(rango[4], rango[6])}`;
 }
 
 function abrirFrase(type, eventData) {
@@ -404,6 +510,9 @@ function abrirFrase(type, eventData) {
         document.getElementById('frase-autor').textContent = '';
     }
     eventoSeleccionado = eventData;
+    const stateLabel = type === 'luz' ? 'Corriente' : type === 'apagon' ? 'Apagón' : 'Servicio 24 h';
+    document.getElementById('block-summary').textContent =
+        `${eventData.day.fecha || 'Día'} · ${eventData.block.hora || 'Horario'} · ${stateLabel}`;
     document.getElementById('calendar-status').textContent = '';
     toggleModal('modal-frase', true);
 }
@@ -414,13 +523,13 @@ function toggleModal(id, visible) {
 }
 
 function aplicarPreferencias() {
-    const theme = localStorage.getItem(STORAGE_KEYS.theme) || 'dark';
-    const layout = localStorage.getItem(STORAGE_KEYS.layout) || 'list';
+    const theme = storage.getItem(STORAGE_KEYS.theme) || 'dark';
+    const layout = storage.getItem(STORAGE_KEYS.layout) || 'list';
     document.documentElement.dataset.theme = ['dark', 'light', 'contrast'].includes(theme) ? theme : 'dark';
     syncPreferenceControls(theme, layout);
 }
 
-function syncPreferenceControls(theme = localStorage.getItem(STORAGE_KEYS.theme) || 'dark', layout = localStorage.getItem(STORAGE_KEYS.layout) || 'list') {
+function syncPreferenceControls(theme = storage.getItem(STORAGE_KEYS.theme) || 'dark', layout = storage.getItem(STORAGE_KEYS.layout) || 'list') {
     document.querySelectorAll('input[name="theme"]').forEach((input) => { input.checked = input.value === theme; });
     document.querySelectorAll('input[name="layout"]').forEach((input) => { input.checked = input.value === layout; });
 }
@@ -428,11 +537,11 @@ function syncPreferenceControls(theme = localStorage.getItem(STORAGE_KEYS.theme)
 function guardarPreferencia(kind, value) {
     if (kind === 'theme') {
         if (!['dark', 'light', 'contrast'].includes(value)) return;
-        localStorage.setItem(STORAGE_KEYS.theme, value);
+        storage.setItem(STORAGE_KEYS.theme, value);
         document.documentElement.dataset.theme = value;
     } else {
         if (!['list', 'calendar'].includes(value)) return;
-        localStorage.setItem(STORAGE_KEYS.layout, value);
+        storage.setItem(STORAGE_KEYS.layout, value);
         if (circuitoActual) renderizarHorario();
     }
 }
