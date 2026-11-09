@@ -1,4 +1,4 @@
-const CACHE_NAME = 'apagonia-cfg-v8'; // Sube este número si haces nuevos cambios
+const CACHE_NAME = 'apagonia-cfg-v10'; // ⚠️ v10 para forzar limpieza
 const APP_FILES = [
     './', './index.html', './styles.css', './app.js', './manifest.webmanifest',
     './images.png', './qr.jpg', './horarios.json', './frases.json', './version.json'

@@ -22,10 +22,14 @@ let fraseSeleccionada = '';
 document.addEventListener('DOMContentLoaded', iniciarApp);
 
 async function iniciarApp() {
-    enlazarEventos();
-    aplicarPreferencias();
-    await Promise.all([registrarServiceWorker(), cargarDatosJSON(), cargarVersion()]);
-    renderizarHorarioIfNeeded();
+    try {
+        enlazarEventos();
+        aplicarPreferencias();
+        await Promise.all([registrarServiceWorker(), cargarDatosJSON(), cargarVersion()]);
+        renderizarHorarioIfNeeded();
+    } catch (e) {
+        console.error("Error al iniciar la app:", e);
+    }
 }
 
 function enlazarEventos() {
@@ -330,8 +334,6 @@ function guardarPreferencia(kind, value) {
     }
 }
 
-// --- LÓGICA DE NOTIFICACIONES CON EL BRIDGE DE MEDIAN ---
-
 function abrirRecordatorios() {
     setPushStatus('Comprobando estado...');
     const btn = document.getElementById('btn-enable-push');
@@ -339,20 +341,24 @@ function abrirRecordatorios() {
     btn.disabled = false;
 
     if (window.median && median.firebaseMessaging) {
-        median.firebaseMessaging.getPermissionStatus({
-            callback: function(result) {
-                if (result.granted) {
-                    setPushStatus('Las notificaciones ya están activadas ✅');
-                    btn.textContent = 'Notificaciones Activadas ✅';
-                    btn.disabled = true;
-                } else {
-                    setPushStatus('Para recibir avisos, activa las notificaciones push.');
+        try {
+            median.firebaseMessaging.getPermissionStatus({
+                callback: function(result) {
+                    if (result && result.granted) {
+                        setPushStatus('Las notificaciones ya están activadas ✅');
+                        btn.textContent = 'Notificaciones Activadas ✅';
+                        btn.disabled = true;
+                    } else {
+                        setPushStatus('Para recibir avisos, activa las notificaciones push.');
+                    }
                 }
-            }
-        });
+            });
+        } catch (e) {
+            setPushStatus('No se pudo comprobar el estado. Intenta activar manualmente.');
+        }
     } else {
         setPushStatus('Las notificaciones nativas solo están disponibles en la app instalada (APK).');
-        btn.textContent = 'No disponible';
+        btn.textContent = 'No disponible en web';
         btn.disabled = true;
     }
     toggleModal('modal-recordatorios', true);
@@ -362,31 +368,44 @@ function setPushStatus(m) { const el = document.getElementById('push-status'); i
 
 function activarNotificacionesPush() {
     const btn = document.getElementById('btn-enable-push');
-    
     if (!window.median || !median.firebaseMessaging) {
         setPushStatus('Error: El servicio nativo no está disponible.');
         return;
     }
-
     btn.disabled = true;
     setPushStatus('Solicitando permiso...');
 
-    median.firebaseMessaging.requestPermission({
-        callback: function(permission) {
+    const timeoutId = setTimeout(() => {
+        if (btn.disabled) {
             btn.disabled = false;
-            if (permission.granted) {
-                setPushStatus('¡Notificaciones activadas! ✅');
-                btn.textContent = 'Notificaciones Activadas ✅';
-                median.firebaseMessaging.register({
-                    callback: function(regResult) {
-                        console.log('Token FCM obtenido:', regResult.token);
-                    }
-                });
-            } else {
-                setPushStatus('No se concedió el permiso. Actívalo desde los ajustes de tu teléfono.');
-            }
+            setPushStatus('El sistema no respondió. Revisa los permisos en los ajustes de tu teléfono.');
         }
-    });
+    }, 3000);
+
+    try {
+        median.firebaseMessaging.requestPermission({
+            callback: function(permission) {
+                clearTimeout(timeoutId);
+                btn.disabled = false;
+                if (permission && permission.granted) {
+                    setPushStatus('¡Notificaciones activadas! ✅');
+                    btn.textContent = 'Notificaciones Activadas ✅';
+                    btn.disabled = true;
+                    median.firebaseMessaging.register({
+                        callback: function(regResult) {
+                            console.log('Token FCM obtenido:', regResult ? regResult.token : 'desconocido');
+                        }
+                    });
+                } else {
+                    setPushStatus('No se concedió el permiso. Actívalo desde los ajustes de tu teléfono.');
+                }
+            }
+        });
+    } catch (error) {
+        clearTimeout(timeoutId);
+        btn.disabled = false;
+        setPushStatus('Error al solicitar permiso. Revisa los ajustes de Android.');
+    }
 }
 
 async function copiarNumeroTarjeta() {
@@ -412,13 +431,11 @@ function guardarEventoGoogleCalendar() {
     window.open(`https://calendar.google.com/calendar/render?${params.toString()}`, '_blank');
 }
 
-// --- EXPORTACIÓN .ICS ARREGLADA (SIN DATA URI) ---
 function exportarMesICS() {
     if (!circuitoActual || !horariosData[circuitoActual]) {
         setPushStatus('Selecciona un circuito para exportar.');
         return;
     }
-    
     const events = [];
     horariosData[circuitoActual].semanas.forEach(w => (w.dias||[]).forEach(d => {
         const date = obtenerFechaDia(w.titulo, d.fecha);
@@ -443,14 +460,12 @@ function exportarMesICS() {
     const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
-    
     link.href = url;
     link.download = `Apagonia_C${circuitoActual}.ics`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
-    
     setPushStatus('✅ Archivo descargado. Revisa tus notificaciones o la carpeta de Descargas.');
 }
 
