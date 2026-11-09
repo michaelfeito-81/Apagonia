@@ -9,6 +9,8 @@
     <link rel="icon" type="image/png" href="images.png">
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- ONE SIGNAL SDK -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
         window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -31,6 +33,7 @@
 </head>
 <body>
     <div class="bg-glow" aria-hidden="true"></div>
+    
     <div id="update-banner" class="update-banner" hidden role="status">
         <span>Hay una nueva versión de Apagonía.</span>
         <a id="update-link" href="#" target="_blank" rel="noopener noreferrer">Actualizar</a>
@@ -38,12 +41,15 @@
     </div>
 
     <main>
+        <!-- VISTA PORTADA -->
         <section id="view-cover" class="view active" aria-labelledby="app-title">
             <div class="cover-content">
                 <div class="icon-bolt" aria-hidden="true">⚡</div>
                 <h1 id="app-title" class="gradient-text">Apagonía CFG</h1>
                 <p class="subtitle">Horarios de apagones · Cienfuegos</p>
                 <p id="cover-data-status" class="data-status" role="status">Preparando datos…</p>
+                <p class="schedule-disclaimer">Confirma la vigencia del cronograma con el proveedor; la descarga reciente no garantiza que el horario haya cambiado.</p>
+                
                 <div class="circuit-grid" aria-label="Selecciona tu circuito">
                     <button class="circuit-btn" data-circuit="405" type="button">C-405</button>
                     <button class="circuit-btn" data-circuit="406" type="button">C-406</button>
@@ -51,10 +57,11 @@
                     <button class="circuit-btn" data-circuit="91" type="button">C-91</button>
                 </div>
                 <a id="cover-telegram" class="telegram-link" href="#" target="_blank" rel="noopener noreferrer" hidden>💬 Únete a Telegram</a>
-                <a id="link-legal-cover" class="legal-link" href="#modal-legal">Aviso legal y condiciones</a>
+                <button id="link-legal-cover" class="legal-link-btn" type="button">Aviso legal y condiciones</button>
             </div>
         </section>
 
+        <!-- VISTA DASHBOARD -->
         <section id="view-dashboard" class="view" aria-label="Horario del circuito">
             <header class="dash-header">
                 <div class="header-top">
@@ -66,6 +73,7 @@
                 </div>
                 <p id="current-month" class="month-label">Cargando horario…</p>
                 <p id="data-status" class="data-status" role="status" aria-live="polite"></p>
+                <p class="schedule-disclaimer">Confirma la vigencia del cronograma con el proveedor antes de planificar.</p>
             </header>
             <div id="contenedor-horario">
                 <p class="loader">Cargando horario…</p>
@@ -74,6 +82,7 @@
         </section>
     </main>
 
+    <!-- MODAL FRASES -->
     <div id="modal-frase" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="frase-texto">
         <div class="glass-modal">
             <div class="quote-mark" aria-hidden="true">“</div>
@@ -86,6 +95,7 @@
         </div>
     </div>
 
+    <!-- MODAL RECORDATORIOS -->
     <div id="modal-recordatorios" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="recordatorios-title">
         <div class="glass-modal">
             <h3 id="recordatorios-title">🔔 Notificaciones</h3>
@@ -97,19 +107,23 @@
         </div>
     </div>
 
+    <!-- MODAL AJUSTES -->
     <div id="modal-ajustes" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="settings-title">
         <div class="glass-modal">
             <h3 id="settings-title">⚙️ Ajustes</h3>
             <fieldset class="settings-group">
-                <legend>Tema</legend>
-                <label class="setting-row"><span>Oscuro</span><input type="radio" name="theme" value="dark"></label>
-                <label class="setting-row"><span>Claro</span><input type="radio" name="theme" value="light"></label>
+                <legend>Tema Visual</legend>
+                <label class="setting-row"><span>Oscuro (Cyberpunk)</span><input type="radio" name="theme" value="dark"></label>
+                <label class="setting-row"><span>Claro (Profesional)</span><input type="radio" name="theme" value="light"></label>
+                <label class="setting-row"><span>Deportivo (Alta Energía)</span><input type="radio" name="theme" value="sport"></label>
+                <label class="setting-row"><span>Chica (Pastel)</span><input type="radio" name="theme" value="girl"></label>
+                <label class="setting-row"><span>Divertido (Colorido)</span><input type="radio" name="theme" value="funny"></label>
                 <label class="setting-row"><span>Alto Contraste</span><input type="radio" name="theme" value="contrast"></label>
             </fieldset>
             <fieldset class="settings-group">
-                <legend>Layout</legend>
-                <label class="setting-row"><span>Lista</span><input type="radio" name="layout" value="list"></label>
-                <label class="setting-row"><span>Calendario</span><input type="radio" name="layout" value="calendar"></label>
+                <legend>Vista de Horario</legend>
+                <label class="setting-row"><span>Lista Detallada</span><input type="radio" name="layout" value="list"></label>
+                <label class="setting-row"><span>Calendario Mensual</span><input type="radio" name="layout" value="calendar"></label>
             </fieldset>
             <fieldset class="settings-group">
                 <legend>Información</legend>
@@ -119,6 +133,7 @@
         </div>
     </div>
 
+    <!-- MODAL LEGAL -->
     <div id="modal-legal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="legal-title">
         <div class="glass-modal legal-modal">
             <h3 id="legal-title">📄 Aviso legal y condiciones</h3>
@@ -132,16 +147,13 @@
             </section>
             <section class="legal-section">
                 <h4>Alcance de responsabilidad</h4>
-                <p>La aplicación se ofrece con fines informativos y sin garantía de exactitud, disponibilidad o actualización continua. En la medida permitida por la legislación aplicable, sus responsables no asumen responsabilidad por errores u omisiones en los datos, interrupciones del servicio, decisiones tomadas basándose en la aplicación ni daños derivados de su uso. Este aviso no limita derechos que legalmente no puedan excluirse.</p>
-            </section>
-            <section class="legal-section">
-                <h4>Servicios de terceros</h4>
-                <p>Las notificaciones y enlaces a servicios externos dependen de sus respectivos proveedores, condiciones y disponibilidad. Apagonía CFG no controla esos servicios.</p>
+                <p>La aplicación se ofrece con fines informativos y sin garantía de exactitud, disponibilidad o actualización continua. En la medida permitida por la legislación aplicable, sus responsables no asumen responsabilidad por errores u omisiones en los datos, interrupciones del servicio, decisiones tomadas basándose en la aplicación ni daños derivados de su uso.</p>
             </section>
             <button class="btn-secondary" type="button" data-close-modal="modal-legal">Cerrar</button>
         </div>
     </div>
 
+    <!-- MODAL NOVEDADES -->
     <div id="modal-novedades" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="news-title">
         <div class="glass-modal">
             <h3 id="news-title">Novedades</h3>
@@ -150,6 +162,7 @@
         </div>
     </div>
 
+    <!-- MODAL DONAR -->
     <div id="modal-donar" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="donar-title">
         <div class="glass-modal">
             <h3 id="donar-title">☕ Apoya el proyecto</h3>
@@ -161,8 +174,8 @@
                     <button id="btn-copy-card" class="btn-copy" type="button">Copiar</button>
                 </div>
                 <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
-                <p class="donation-label">Escanea el código QR con Transfermóvil</p>
-                <img class="donation-qr" src="qr.jpg" alt="Código QR de Transfermóvil para apoyar el proyecto" width="320" height="320">
+                <p class="donation-label">Escanea el código QR</p>
+                <img class="donation-qr" src="qr.jpg" alt="Código QR de Transfermóvil" width="320" height="320">
             </div>
             <a id="donation-telegram" class="telegram-link" href="#" target="_blank" rel="noopener noreferrer" hidden>💬 Únete a Telegram</a>
             <button class="btn-secondary" type="button" data-close-modal="modal-donar">Cerrar</button>

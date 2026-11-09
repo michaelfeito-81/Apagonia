@@ -8,54 +8,16 @@ const STORAGE_KEYS = {
     theme: 'apagoniaTema',
     layout: 'apagoniaLayout'
 };
-const MONTHS = {
-    enero: 0, ene: 0, febrero: 1, feb: 1, marzo: 2, mar: 2, abril: 3, abr: 3,
-    mayo: 4, may: 4, junio: 5, jun: 5, julio: 6, jul: 6, agosto: 7, ago: 7,
-    septiembre: 8, setiembre: 8, septiembre: 8, sept: 8, sep: 8,
-    octubre: 9, oct: 9, noviembre: 10, nov: 10, diciembre: 11, dic: 11
-};
-const MONTH_NAMES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+const MONTHS = { enero: 0, ene: 0, febrero: 1, feb: 1, marzo: 2, mar: 2, abril: 3, abr: 3, mayo: 4, may: 4, junio: 5, jun: 5, julio: 6, jul: 6, agosto: 7, ago: 7, septiembre: 8, setiembre: 8, sept: 8, sep: 8, octubre: 9, oct: 9, noviembre: 10, nov: 10, diciembre: 11, dic: 11 };
+const MONTH_NAMES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 const WEEKDAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-
-const memoryStorage = new Map();
-let storageWarningShown = false;
-const storage = {
-    getItem(key) {
-        try {
-            const value = window.localStorage.getItem(key);
-            if (value !== null) memoryStorage.set(key, value);
-            return value;
-        } catch (error) {
-            warnStorageUnavailable(error);
-            return memoryStorage.get(key) || null;
-        }
-    },
-    setItem(key, value) {
-        const stringValue = String(value);
-        memoryStorage.set(key, stringValue);
-        try {
-            window.localStorage.setItem(key, stringValue);
-        } catch (error) {
-            warnStorageUnavailable(error);
-        }
-    },
-    removeItem(key) {
-        memoryStorage.delete(key);
-        try {
-            window.localStorage.removeItem(key);
-        } catch (error) {
-            warnStorageUnavailable(error);
-        }
-    }
-};
 
 let horariosData = {};
 let frasesData = {};
 let versionData = null;
-let circuitoActual = storage.getItem(STORAGE_KEYS.circuit);
+let circuitoActual = localStorage.getItem(STORAGE_KEYS.circuit);
 let eventoSeleccionado = null;
 let fraseSeleccionada = '';
-let datosCargando = true;
 
 document.addEventListener('DOMContentLoaded', iniciarApp);
 
@@ -67,87 +29,48 @@ async function iniciarApp() {
         setPushStatus('No se pudo conectar con el servicio de notificaciones. Comprueba tu conexión e inténtalo de nuevo.');
         document.getElementById('btn-enable-push').disabled = false;
     });
-    cargarDatosGuardados();
+    await Promise.all([registrarServiceWorker(), cargarDatosJSON(), cargarVersion()]);
     renderizarHorarioIfNeeded();
-    void registrarServiceWorker();
-    void cargarDatosJSON().then(renderizarHorarioIfNeeded);
-    void cargarVersion();
+    if (window.apagoniaOneSignal) actualizarEstadoPush();
+    if (window.apagoniaOneSignalError) {
+        setPushStatus('No se pudo conectar con el servicio de notificaciones. Comprueba tu conexión e inténtalo de nuevo.');
+    }
 }
 
 function enlazarEventos() {
-    document.addEventListener('click', manejarClickInterfaz);
-    document.addEventListener('change', manejarCambioInterfaz);
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') document.querySelectorAll('.modal-overlay.active').forEach((modal) => toggleModal(modal.id, false));
+    document.querySelectorAll('[data-circuit]').forEach((button) => {
+        button.addEventListener('click', () => selectCircuit(button.dataset.circuit));
     });
-}
-
-function manejarClickInterfaz(event) {
-    const target = event.target instanceof Element ? event.target : null;
-    if (!target) return;
-
-    const closeButton = target.closest('[data-close-modal]');
-    if (closeButton) {
-        toggleModal(closeButton.dataset.closeModal, false);
-        return;
-    }
-
-    const modal = target.closest('.modal-overlay');
-    if (modal && target === modal) {
-        toggleModal(modal.id, false);
-        return;
-    }
-
-    const button = target.closest('button, a');
-    if (!button) return;
-
-    if (button.id === 'link-legal-cover') {
-        event.preventDefault();
-        toggleModal('modal-legal', true);
-        return;
-    }
-    if (button.dataset.circuit) return selectCircuit(button.dataset.circuit);
-    switch (button.id) {
-        case 'btn-back': logout(); break;
-        case 'btn-refresh': void actualizarDatos(); break;
-        case 'btn-noti': abrirRecordatorios(); break;
-        case 'btn-settings':
-            syncPreferenceControls();
-            toggleModal('modal-ajustes', true);
-            break;
-        case 'btn-legal': toggleModal('modal-legal', true); break;
-        case 'btn-donar': toggleModal('modal-donar', true); break;
-        case 'btn-copy-card': void copiarNumeroTarjeta(); break;
-        case 'btn-enable-push': activarNotificacionesPush(); break;
-        case 'btn-export-month-push': exportarMesICS(); break;
-        case 'btn-calendar-event': guardarEventoGoogleCalendar(); break;
-        case 'btn-news': toggleModal('modal-novedades', true); break;
-        default: break;
-    }
-}
-
-function manejarCambioInterfaz(event) {
-    const input = event.target;
-    if (!(input instanceof HTMLInputElement)) return;
-    if (input.name === 'theme') guardarPreferencia('theme', input.value);
-    if (input.name === 'layout') guardarPreferencia('layout', input.value);
-}
-
-function warnStorageUnavailable(error) {
-    if (storageWarningShown) return;
-    storageWarningShown = true;
-    console.warn('El almacenamiento local no está disponible; los datos solo se conservarán mientras la app permanezca abierta.', error);
-    setDataStatus('El almacenamiento del dispositivo no está disponible. Algunos ajustes no se conservarán al cerrar la app.');
-}
-
-function cargarDatosGuardados() {
-    const savedSchedules = leerJSONLocal(STORAGE_KEYS.schedules);
-    const savedPhrases = leerJSONLocal(STORAGE_KEYS.phrases);
-    if (!datosValidos(savedSchedules, savedPhrases)) return;
-    horariosData = savedSchedules;
-    frasesData = savedPhrases;
-    const lastSync = storage.getItem(STORAGE_KEYS.syncedAt);
-    setDataStatus(`Mostrando la última copia guardada${lastSync ? ` (${formatearFecha(lastSync)})` : ''}. Comprobando si hay datos nuevos…`);
+    document.getElementById('btn-back').addEventListener('click', logout);
+    document.getElementById('btn-refresh').addEventListener('click', actualizarDatos);
+    document.getElementById('btn-noti').addEventListener('click', abrirRecordatorios);
+    document.getElementById('btn-settings').addEventListener('click', () => {
+        syncPreferenceControls();
+        toggleModal('modal-ajustes', true);
+    });
+    document.getElementById('link-legal-cover').addEventListener('click', () => toggleModal('modal-legal', true));
+    document.getElementById('btn-legal').addEventListener('click', () => toggleModal('modal-legal', true));
+    document.getElementById('btn-donar').addEventListener('click', () => toggleModal('modal-donar', true));
+    document.getElementById('btn-copy-card').addEventListener('click', copiarNumeroTarjeta);
+    document.getElementById('btn-enable-push').addEventListener('click', activarNotificacionesPush);
+    document.getElementById('btn-export-month-push').addEventListener('click', exportarMesICS);
+    document.getElementById('btn-calendar-event').addEventListener('click', guardarEventoGoogleCalendar);
+    document.getElementById('btn-news').addEventListener('click', () => toggleModal('modal-novedades', true));
+    
+    document.querySelectorAll('input[name="theme"]').forEach((input) => {
+        input.addEventListener('change', () => guardarPreferencia('theme', input.value));
+    });
+    document.querySelectorAll('input[name="layout"]').forEach((input) => {
+        input.addEventListener('change', () => guardarPreferencia('layout', input.value));
+    });
+    document.querySelectorAll('[data-close-modal]').forEach((button) => {
+        button.addEventListener('click', () => toggleModal(button.dataset.closeModal, false));
+    });
+    document.querySelectorAll('.modal-overlay').forEach((modal) => {
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) toggleModal(modal.id, false);
+        });
+    });
 }
 
 async function registrarServiceWorker() {
@@ -156,7 +79,6 @@ async function registrarServiceWorker() {
         await navigator.serviceWorker.register('./service-worker.js');
     } catch (error) {
         console.error('No se pudo registrar el almacenamiento offline:', error);
-        setDataStatus('No se pudo activar el modo offline. Comprueba que la app esté publicada por HTTPS.');
     }
 }
 
@@ -165,334 +87,209 @@ async function obtenerJSON(ruta) {
     const timeout = window.setTimeout(() => controller.abort(), 10000);
     try {
         const response = await fetch(new URL(ruta, document.baseURI), { cache: 'no-cache', signal: controller.signal });
-        if (!response.ok) throw new Error(`Error HTTP ${response.status} al cargar ${ruta}`);
-        return {
-            data: await response.json(),
-            fromCache: response.headers.get('X-Offline-Cache') === 'true'
-        };
+        if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
+        return { data: await response.json(), fromCache: response.headers.get('X-Offline-Cache') === 'true' };
     } finally {
         window.clearTimeout(timeout);
     }
 }
 
 function datosValidos(horarios, frases) {
-    return horarios && typeof horarios === 'object' && Object.keys(horarios).length > 0
-        && frases && typeof frases === 'object';
+    return horarios && typeof horarios === 'object' && Object.keys(horarios).length > 0 && frases && typeof frases === 'object';
 }
 
 async function cargarDatosJSON() {
     try {
-        const [horariosResult, frasesResult] = await Promise.all([
-            obtenerJSON('horarios.json'),
-            obtenerJSON('frases.json')
-        ]);
-        if (!datosValidos(horariosResult.data, frasesResult.data)) throw new Error('Los archivos JSON no tienen el formato esperado.');
-        horariosData = horariosResult.data;
-        frasesData = frasesResult.data;
-        try {
-            storage.setItem(STORAGE_KEYS.schedules, JSON.stringify(horariosData));
-            storage.setItem(STORAGE_KEYS.phrases, JSON.stringify(frasesData));
-            if (!horariosResult.fromCache && !frasesResult.fromCache) storage.setItem(STORAGE_KEYS.syncedAt, new Date().toISOString());
-        } catch (error) {
-            console.error('No se pudieron guardar los datos descargados:', error);
-        }
-        if (horariosResult.fromCache || frasesResult.fromCache || !navigator.onLine) {
-            const lastSync = storage.getItem(STORAGE_KEYS.syncedAt);
-            setDataStatus(`Sin conexión: usando los datos disponibles.${lastSync ? ` Última descarga: ${formatearFecha(lastSync)}.` : ''}`);
-        } else {
-            setDataStatus('Datos descargados y guardados para usar sin conexión. Confirma su vigencia con el proveedor.');
-        }
+        const [hResult, fResult] = await Promise.all([obtenerJSON('horarios.json'), obtenerJSON('frases.json')]);
+        if (!datosValidos(hResult.data, fResult.data)) throw new Error('Formato inválido');
+        horariosData = hResult.data;
+        frasesData = fResult.data;
+        localStorage.setItem(STORAGE_KEYS.schedules, JSON.stringify(horariosData));
+        localStorage.setItem(STORAGE_KEYS.phrases, JSON.stringify(frasesData));
+        if (!hResult.fromCache && !fResult.fromCache) localStorage.setItem(STORAGE_KEYS.syncedAt, new Date().toISOString());
+        setDataStatus('Datos actualizados.');
     } catch (error) {
-        console.warn('No se pudieron descargar los datos publicados; se usará la copia local si existe:', error);
-        const savedSchedules = leerJSONLocal(STORAGE_KEYS.schedules);
-        const savedPhrases = leerJSONLocal(STORAGE_KEYS.phrases);
-        if (datosValidos(savedSchedules, savedPhrases)) {
-            horariosData = savedSchedules;
-            frasesData = savedPhrases;
-            const lastSync = storage.getItem(STORAGE_KEYS.syncedAt);
-            setDataStatus(`Sin conexión: usando la última copia guardada.${lastSync ? ` Última descarga: ${formatearFecha(lastSync)}.` : ''}`);
+        const sHorarios = leerJSONLocal(STORAGE_KEYS.schedules);
+        const sFrases = leerJSONLocal(STORAGE_KEYS.phrases);
+        if (datosValidos(sHorarios, sFrases)) {
+            horariosData = sHorarios;
+            frasesData = sFrases;
+            setDataStatus('Sin conexión: usando copia local.');
         } else {
-            horariosData = {};
-            frasesData = {};
-            setDataStatus('No se pudieron cargar los horarios. Conéctate a internet para descargarlos.');
+            setDataStatus('Error al cargar los horarios.');
         }
-    } finally {
-        datosCargando = false;
     }
 }
 
 async function cargarVersion() {
     try {
         const result = await obtenerJSON('version.json');
-        if (!result.data || typeof result.data.latest_version !== 'string' || !Array.isArray(result.data.history)) {
-            throw new Error('version.json no tiene el formato esperado.');
-        }
         versionData = result.data;
-        try {
-            storage.setItem(STORAGE_KEYS.version, JSON.stringify(versionData));
-        } catch (storageError) {
-            console.error('No se pudo guardar version.json para uso offline:', storageError);
-        }
     } catch (error) {
-        console.warn('No se pudo cargar version.json:', error);
         versionData = leerJSONLocal(STORAGE_KEYS.version);
     }
     if (!versionData) return;
-    establecerEnlaceTelegram(versionData.url_telegram);
-    renderizarHistorial(versionData.history);
+    if (versionData.url_telegram) {
+        ['cover-telegram', 'donation-telegram'].forEach(id => { const el = document.getElementById(id); if (el) { el.href = versionData.url_telegram; el.hidden = false; } });
+    }
+    if (versionData.history) renderizarHistorial(versionData.history);
     if (compararVersiones(versionData.latest_version, APP_VERSION) > 0 && versionData.url_apk) {
         document.getElementById('update-link').href = versionData.url_apk;
         document.getElementById('update-banner').hidden = false;
     }
 }
 
-function establecerEnlaceTelegram(url) {
-    if (!url) return;
-    ['cover-telegram', 'donation-telegram'].forEach((id) => {
-        const link = document.getElementById(id);
-        link.href = url;
-        link.hidden = false;
-    });
-}
-
 function renderizarHistorial(history) {
     const container = document.getElementById('version-history');
-    container.replaceChildren();
-    history.forEach((entry) => {
-        const article = document.createElement('article');
-        article.className = 'history-entry';
-        const title = document.createElement('h4');
-        title.textContent = `Versión ${entry.version || '—'}`;
-        article.appendChild(title);
-        if (entry.date) {
-            const date = document.createElement('p');
-            date.textContent = entry.date;
-            article.appendChild(date);
-        }
-        const list = document.createElement('ul');
-        (Array.isArray(entry.changes) ? entry.changes : []).forEach((change) => {
-            const item = document.createElement('li');
-            item.textContent = change;
-            list.appendChild(item);
-        });
-        article.appendChild(list);
-        container.appendChild(article);
-    });
+    if (!container) return;
+    container.innerHTML = history.map(entry => `
+        <article class="history-entry">
+            <h4>Versión ${entry.version}</h4>
+            ${entry.date ? `<p>${entry.date}</p>` : ''}
+            <ul>${entry.changes.map(c => `<li>${c}</li>`).join('')}</ul>
+        </article>
+    `).join('');
 }
 
-function compararVersiones(left, right) {
-    const parse = (value) => String(value).split('.').map((part) => Number.parseInt(part, 10) || 0);
-    const a = parse(left);
-    const b = parse(right);
-    for (let index = 0; index < Math.max(a.length, b.length); index += 1) {
-        if ((a[index] || 0) !== (b[index] || 0)) return (a[index] || 0) > (b[index] || 0) ? 1 : -1;
+function compararVersiones(l, r) {
+    const p = v => String(v).split('.').map(Number);
+    const a = p(l), b = p(r);
+    for (let i = 0; i < Math.max(a.length, b.length); i++) {
+        if ((a[i] || 0) !== (b[i] || 0)) return (a[i] || 0) > (b[i] || 0) ? 1 : -1;
     }
     return 0;
 }
 
-function leerJSONLocal(key) {
-    try {
-        const value = storage.getItem(key);
-        return value ? JSON.parse(value) : null;
-    } catch (error) {
-        console.error(`No se pudo leer la copia local ${key}:`, error);
-        return null;
-    }
-}
-
-function formatearFecha(value) {
-    const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? 'fecha desconocida' : date.toLocaleString('es-CU', { dateStyle: 'short', timeStyle: 'short' });
-}
-
-function setDataStatus(message) {
-    ['cover-data-status', 'data-status'].forEach((id) => {
-        const element = document.getElementById(id);
-        if (element) element.textContent = message;
-    });
-}
+function leerJSONLocal(k) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch { return null; } }
+function setDataStatus(m) { ['cover-data-status', 'data-status'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = m; }); }
 
 async function actualizarDatos() {
-    const button = document.getElementById('btn-refresh');
-    button.disabled = true;
-    button.classList.add('spinning');
-    try {
-        await cargarDatosJSON();
-        renderizarHorarioIfNeeded();
-    } finally {
-        button.disabled = false;
-        button.classList.remove('spinning');
-    }
+    const btn = document.getElementById('btn-refresh');
+    btn.disabled = true; btn.classList.add('spinning');
+    await cargarDatosJSON();
+    renderizarHorarioIfNeeded();
+    btn.disabled = false; btn.classList.remove('spinning');
 }
 
-function mostrarCover() {
-    document.getElementById('view-cover').classList.add('active');
-    document.getElementById('view-dashboard').classList.remove('active');
-}
-
-function mostrarDashboard() {
-    document.getElementById('view-cover').classList.remove('active');
-    document.getElementById('view-dashboard').classList.add('active');
-    document.getElementById('current-circuit').textContent = circuitoActual;
-    renderizarHorario();
-}
-
-function renderizarHorarioIfNeeded() {
-    if (circuitoActual) mostrarDashboard();
-    else mostrarCover();
-}
-
-function selectCircuit(id) {
-    circuitoActual = id;
-    storage.setItem(STORAGE_KEYS.circuit, id);
-    mostrarDashboard();
-}
-
-function logout() {
-    storage.removeItem(STORAGE_KEYS.circuit);
-    circuitoActual = null;
-    mostrarCover();
-}
+function mostrarCover() { document.getElementById('view-cover').classList.add('active'); document.getElementById('view-dashboard').classList.remove('active'); }
+function mostrarDashboard() { document.getElementById('view-cover').classList.remove('active'); document.getElementById('view-dashboard').classList.add('active'); document.getElementById('current-circuit').textContent = circuitoActual; renderizarHorario(); }
+function renderizarHorarioIfNeeded() { if (circuitoActual) mostrarDashboard(); else mostrarCover(); }
+function selectCircuit(id) { circuitoActual = id; localStorage.setItem(STORAGE_KEYS.circuit, id); mostrarDashboard(); }
+function logout() { localStorage.removeItem(STORAGE_KEYS.circuit); circuitoActual = null; mostrarCover(); }
 
 function renderizarHorario() {
     const container = document.getElementById('contenedor-horario');
     const circuit = horariosData[circuitoActual];
     if (!circuit || !Array.isArray(circuit.semanas)) {
-        document.getElementById('current-month').textContent = 'Horario no disponible';
-        container.innerHTML = datosCargando
-            ? '<p class="loader">Cargando horario…</p>'
-            : '<p class="empty-state">No hay datos para este circuito en la copia disponible. Comprueba la conexión o vuelve a intentar con el botón actualizar.</p>';
+        container.innerHTML = '<p class="empty-state">No hay datos disponibles.</p>';
         return;
     }
-    const now = new Date();
-    document.getElementById('current-month').textContent = `${circuit.mes || 'Horario publicado'} · ${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}`;
-    if (storage.getItem(STORAGE_KEYS.layout) === 'calendar') renderizarCalendario(container, circuit);
+    document.getElementById('current-month').textContent = `Cronograma Completo`;
+    if (localStorage.getItem(STORAGE_KEYS.layout) === 'calendar') renderizarCalendario(container, circuit);
     else renderizarLista(container, circuit);
 }
 
 function renderizarLista(container, circuit) {
     const fragment = document.createDocumentFragment();
-    circuit.semanas.forEach((week) => {
-        const card = document.createElement('section');
-        card.className = 'week-card';
-        const title = document.createElement('h3');
-        title.className = 'week-title';
-        title.textContent = week.titulo || 'Semana';
-        card.appendChild(title);
-        (Array.isArray(week.dias) ? week.dias : []).forEach((day) => {
-            const row = document.createElement('div');
-            row.className = 'day-row';
-            const label = document.createElement('p');
-            label.className = 'date-label';
-            label.textContent = day.fecha || 'Día';
-            row.appendChild(label);
-            const bar = document.createElement('div');
-            bar.className = 'bar-container';
-            (Array.isArray(day.bloques) ? day.bloques : []).forEach((block) => {
-                bar.appendChild(crearBotonBloque(block, day, week.titulo));
-            });
-            row.appendChild(bar);
-            card.appendChild(row);
+    circuit.semanas.forEach(week => {
+        const card = document.createElement('section'); card.className = 'week-card';
+        card.innerHTML = `<h3 class="week-title">${week.titulo}</h3>`;
+        (week.dias || []).forEach(day => {
+            const row = document.createElement('div'); row.className = 'day-row';
+            row.innerHTML = `<p class="date-label">${day.fecha}</p>`;
+            const bar = document.createElement('div'); bar.className = 'bar-container';
+            (day.bloques || []).forEach(block => bar.appendChild(crearBotonBloque(block, day, week.titulo)));
+            row.appendChild(bar); card.appendChild(row);
         });
         fragment.appendChild(card);
     });
-    container.className = '';
     container.replaceChildren(fragment);
 }
 
+// --- CALENDARIO CORREGIDO (MULTIMES Y SIN DESBORDAMIENTO) ---
 function renderizarCalendario(container, circuit) {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth();
     const scheduleByDate = new Map();
+    const availableMonths = new Set();
+
     circuit.semanas.forEach((week) => {
-        (Array.isArray(week.dias) ? week.dias : []).forEach((day) => {
+        (week.dias || []).forEach((day) => {
             const date = obtenerFechaDia(week.titulo || '', day.fecha || '');
-            if (!date || date.getFullYear() !== year || date.getMonth() !== month) return;
+            if (!date) return;
+            
+            const ym = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+            availableMonths.add(ym);
+            
             const key = fechaISO(date);
             if (!scheduleByDate.has(key)) scheduleByDate.set(key, []);
-            (Array.isArray(day.bloques) ? day.bloques : []).forEach((block) => scheduleByDate.get(key).push({ block, day, title: week.titulo }));
+            (day.bloques || []).forEach((block) => {
+                scheduleByDate.get(key).push({ block, day, title: week.titulo, date });
+            });
         });
     });
+
     const wrapper = document.createElement('div');
     wrapper.className = 'layout-calendar';
-    const legend = document.createElement('div');
-    legend.className = 'calendar-legend';
-    [
-        { className: 'luz', label: 'Corriente' },
-        { className: 'apagon', label: 'Apagón' }
-    ].forEach((item) => {
-        const entry = document.createElement('span');
-        const swatch = document.createElement('i');
-        swatch.className = `legend-swatch ${item.className}`;
-        swatch.setAttribute('aria-hidden', 'true');
-        entry.append(swatch, document.createTextNode(item.label));
-        legend.appendChild(entry);
-    });
-    const grid = document.createElement('div');
-    grid.className = 'calendar-grid';
-    WEEKDAYS.forEach((weekday) => {
-        const header = document.createElement('div');
-        header.className = 'calendar-weekday';
-        header.textContent = weekday;
-        grid.appendChild(header);
-    });
-    const firstDay = new Date(year, month, 1);
-    const offset = (firstDay.getDay() + 6) % 7;
-    for (let index = 0; index < offset; index += 1) {
-        const blank = document.createElement('div');
-        blank.className = 'calendar-cell is-empty';
-        grid.appendChild(blank);
-    }
-    const totalDays = new Date(year, month + 1, 0).getDate();
-    for (let dayNumber = 1; dayNumber <= totalDays; dayNumber += 1) {
-        const date = new Date(year, month, dayNumber);
-        const cell = document.createElement('section');
-        cell.className = 'calendar-cell';
-        const number = document.createElement('p');
-        number.className = 'calendar-day';
-        number.textContent = String(dayNumber);
-        cell.appendChild(number);
-        (scheduleByDate.get(fechaISO(date)) || []).forEach((item) => {
-            const button = crearBotonBloque(item.block, item.day, item.title, true);
-            cell.appendChild(button);
+
+    Array.from(availableMonths).sort().forEach(ym => {
+        const [year, month] = ym.split('-').map(Number);
+        const monthDiv = document.createElement('div');
+        monthDiv.className = 'calendar-month-container';
+        
+        const title = document.createElement('h3');
+        title.className = 'calendar-month-title';
+        title.textContent = `${MONTH_NAMES[month - 1]} ${year}`;
+        monthDiv.appendChild(title);
+
+        const grid = document.createElement('div');
+        grid.className = 'calendar-grid';
+        
+        WEEKDAYS.forEach(w => {
+            const h = document.createElement('div'); h.className = 'calendar-weekday'; h.textContent = w; grid.appendChild(h);
         });
-        grid.appendChild(cell);
-    }
-    wrapper.appendChild(legend);
-    wrapper.appendChild(grid);
-    container.className = '';
+        
+        const firstDay = new Date(year, month - 1, 1);
+        const offset = (firstDay.getDay() + 6) % 7;
+        for (let i = 0; i < offset; i++) {
+            const blank = document.createElement('div'); blank.className = 'calendar-cell is-empty'; grid.appendChild(blank);
+        }
+        
+        const totalDays = new Date(year, month, 0).getDate();
+        for (let d = 1; d <= totalDays; d++) {
+            const date = new Date(year, month - 1, d);
+            const cell = document.createElement('section');
+            cell.className = 'calendar-cell';
+            cell.innerHTML = `<p class="calendar-day">${d}</p>`;
+            
+            (scheduleByDate.get(fechaISO(date)) || []).forEach(item => {
+                const btn = crearBotonBloque(item.block, item.day, item.title, true);
+                cell.appendChild(btn);
+            });
+            grid.appendChild(cell);
+        }
+        monthDiv.appendChild(grid);
+        wrapper.appendChild(monthDiv);
+    });
+    
     container.replaceChildren(wrapper);
 }
 
 function crearBotonBloque(block, day, weekTitle, compact = false) {
     const state = ['luz', 'apagon', 'milagro'].includes(block.estado) ? block.estado : 'apagon';
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = `${compact ? 'calendar-block' : 'segment'} ${state}`;
-    const label = state === 'luz' ? 'Corriente' : state === 'apagon' ? 'Apagón' : 'Servicio 24 h';
-    const marker = state === 'luz' ? '✓' : state === 'apagon' ? '×' : '24h';
-    button.textContent = compact
-        ? formatoHoraCompacto(block.hora || 'Horario')
-        : `${marker} ${block.hora || 'Horario'} · ${label}`;
-    button.title = `${day.fecha || 'Día'} · ${block.hora || 'Horario'}: ${label}`;
-    button.setAttribute('aria-label', `${day.fecha || 'Día'}, ${block.hora || 'horario'}: ${label}`);
-    button.addEventListener('click', () => abrirFrase(state, { block, day, weekTitle }));
-    return button;
-}
-
-function formatoHoraCompacto(hora) {
-    const rango = String(hora).match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?\s*[-–]\s*(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i);
-    if (!rango) return /24\s*horas/i.test(hora) ? '24 h' : hora;
-    const compactarHora = (valor, sufijo) => {
-        let hour = Number(valor) % 24;
-        if (sufijo) {
-            hour %= 12;
-            if (sufijo.toUpperCase() === 'PM') hour += 12;
-        }
-        return String(hour).padStart(2, '0');
-    };
-    return `${compactarHora(rango[1], rango[3])}–${compactarHora(rango[4], rango[6])}`;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = `${compact ? 'calendar-block' : 'segment'} ${state}`;
+    const label = state === 'luz' ? 'Corriente' : state === 'apagon' ? 'Apagón' : '24 h';
+    
+    if (compact) {
+        const timeStr = block.hora.replace(/\s*(AM|PM)/gi, '').replace(/\s*-\s*/, '-');
+        btn.textContent = timeStr;
+    } else {
+        const marker = state === 'luz' ? '✓' : state === 'apagon' ? '×' : '24h';
+        btn.textContent = `${marker} ${block.hora} · ${label}`;
+    }
+    
+    btn.addEventListener('click', () => abrirFrase(state, { block, day, weekTitle }));
+    return btn;
 }
 
 function abrirFrase(type, eventData) {
@@ -500,19 +297,16 @@ function abrirFrase(type, eventData) {
     fraseSeleccionada = '';
     if (Array.isArray(options) && options.length) {
         const phrase = options[Math.floor(Math.random() * options.length)];
-        fraseSeleccionada = phrase.autor ? `“${phrase.texto || ''}” — ${phrase.autor}` : `“${phrase.texto || ''}”`;
-        document.getElementById('frase-texto').textContent = `“${phrase.texto || ''}”`;
+        fraseSeleccionada = phrase.autor ? `“${phrase.texto}” — ${phrase.autor}` : `“${phrase.texto}”`;
+        document.getElementById('frase-texto').textContent = `“${phrase.texto}”`;
         document.getElementById('frase-autor').textContent = phrase.autor ? `— ${phrase.autor}` : '';
     } else {
-        document.getElementById('frase-texto').textContent = type === 'apagon'
-            ? 'Consulta el horario con frecuencia: puede cambiar según las condiciones del servicio.'
-            : 'Aprovecha este momento y mantente al tanto de las actualizaciones.';
+        document.getElementById('frase-texto').textContent = 'Consulta el horario con frecuencia.';
         document.getElementById('frase-autor').textContent = '';
     }
     eventoSeleccionado = eventData;
     const stateLabel = type === 'luz' ? 'Corriente' : type === 'apagon' ? 'Apagón' : 'Servicio 24 h';
-    document.getElementById('block-summary').textContent =
-        `${eventData.day.fecha || 'Día'} · ${eventData.block.hora || 'Horario'} · ${stateLabel}`;
+    document.getElementById('block-summary').textContent = `${eventData.day.fecha} · ${eventData.block.hora} · ${stateLabel}`;
     document.getElementById('calendar-status').textContent = '';
     toggleModal('modal-frase', true);
 }
@@ -523,198 +317,109 @@ function toggleModal(id, visible) {
 }
 
 function aplicarPreferencias() {
-    const theme = storage.getItem(STORAGE_KEYS.theme) || 'dark';
-    const layout = storage.getItem(STORAGE_KEYS.layout) || 'list';
-    document.documentElement.dataset.theme = ['dark', 'light', 'contrast'].includes(theme) ? theme : 'dark';
+    const theme = localStorage.getItem(STORAGE_KEYS.theme) || 'dark';
+    const layout = localStorage.getItem(STORAGE_KEYS.layout) || 'list';
+    document.documentElement.dataset.theme = ['dark', 'light', 'sport', 'girl', 'funny', 'contrast'].includes(theme) ? theme : 'dark';
     syncPreferenceControls(theme, layout);
 }
 
-function syncPreferenceControls(theme = storage.getItem(STORAGE_KEYS.theme) || 'dark', layout = storage.getItem(STORAGE_KEYS.layout) || 'list') {
-    document.querySelectorAll('input[name="theme"]').forEach((input) => { input.checked = input.value === theme; });
-    document.querySelectorAll('input[name="layout"]').forEach((input) => { input.checked = input.value === layout; });
+function syncPreferenceControls(theme = localStorage.getItem(STORAGE_KEYS.theme) || 'dark', layout = localStorage.getItem(STORAGE_KEYS.layout) || 'list') {
+    document.querySelectorAll('input[name="theme"]').forEach(i => i.checked = i.value === theme);
+    document.querySelectorAll('input[name="layout"]').forEach(i => i.checked = i.value === layout);
 }
 
 function guardarPreferencia(kind, value) {
     if (kind === 'theme') {
-        if (!['dark', 'light', 'contrast'].includes(value)) return;
-        storage.setItem(STORAGE_KEYS.theme, value);
+        if (!['dark', 'light', 'sport', 'girl', 'funny', 'contrast'].includes(value)) return;
+        localStorage.setItem(STORAGE_KEYS.theme, value);
         document.documentElement.dataset.theme = value;
     } else {
         if (!['list', 'calendar'].includes(value)) return;
-        storage.setItem(STORAGE_KEYS.layout, value);
+        localStorage.setItem(STORAGE_KEYS.layout, value);
         if (circuitoActual) renderizarHorario();
     }
 }
 
-function abrirRecordatorios() {
-    actualizarEstadoPush();
-    toggleModal('modal-recordatorios', true);
-}
+function abrirRecordatorios() { actualizarEstadoPush(); toggleModal('modal-recordatorios', true); }
 
 function actualizarEstadoPush() {
-    const oneSignal = window.apagoniaOneSignal;
-    const button = document.getElementById('btn-enable-push');
-    if (!oneSignal) {
-        setPushStatus('Las notificaciones push no están disponibles todavía. Comprueba tu conexión y vuelve a intentarlo.');
-        button.textContent = 'Activar Notificaciones';
-        return;
-    }
-    const enabled = oneSignal.Notifications.permission === true;
-    button.textContent = enabled ? 'Notificaciones Activadas ✅' : 'Activar Notificaciones';
-    setPushStatus(enabled
-        ? 'Las notificaciones están activadas en este dispositivo.'
-        : 'Para recibir avisos, permite las notificaciones push cuando el teléfono lo solicite.');
+    const os = window.apagoniaOneSignal;
+    const btn = document.getElementById('btn-enable-push');
+    if (!os) { setPushStatus('Notificaciones no disponibles.'); btn.textContent = 'Activar Notificaciones'; return; }
+    const enabled = os.Notifications.permission === true;
+    btn.textContent = enabled ? 'Notificaciones Activadas ✅' : 'Activar Notificaciones';
+    setPushStatus(enabled ? 'Notificaciones activadas.' : 'Permite las notificaciones para recibir avisos.');
 }
 
-function setPushStatus(message) {
-    const element = document.getElementById('push-status');
-    if (element) element.textContent = message;
-}
+function setPushStatus(m) { const el = document.getElementById('push-status'); if (el) el.textContent = m; }
 
 function activarNotificacionesPush() {
-    const button = document.getElementById('btn-enable-push');
-    if (window.apagoniaOneSignalError) {
-        setPushStatus('No se pudo conectar con el servicio de notificaciones. Comprueba tu conexión e inténtalo de nuevo.');
-        return;
-    }
-    button.disabled = true;
+    const btn = document.getElementById('btn-enable-push');
+    if (window.apagoniaOneSignalError) { setPushStatus('Error de conexión.'); return; }
+    btn.disabled = true;
     window.OneSignalDeferred = window.OneSignalDeferred || [];
-    window.OneSignalDeferred.push(async (oneSignal) => {
+    window.OneSignalDeferred.push(async (os) => {
         try {
-            if (oneSignal.Notifications.permission === true) {
-                setPushStatus('Las notificaciones ya están activadas ✅');
-                button.textContent = 'Notificaciones Activadas ✅';
-                return;
-            }
-            await oneSignal.Notifications.requestPermission();
+            if (os.Notifications.permission === true) { setPushStatus('Ya están activadas.'); return; }
+            await os.Notifications.requestPermission();
             actualizarEstadoPush();
-            if (oneSignal.Notifications.permission !== true) {
-                setPushStatus('No se activaron las notificaciones. Revisa los permisos del navegador o del teléfono.');
-            }
-        } catch (error) {
-            console.error('No se pudo solicitar permiso para las notificaciones push:', error);
-            setPushStatus('No se pudo activar el permiso. Comprueba la conexión y los ajustes de notificaciones del dispositivo.');
-        } finally {
-            button.disabled = false;
-        }
+        } catch (e) { setPushStatus('Error al solicitar permiso.'); }
+        finally { btn.disabled = false; }
     });
 }
 
 async function copiarNumeroTarjeta() {
-    const number = document.getElementById('donation-card-number').textContent.trim();
+    const num = document.getElementById('donation-card-number').textContent.trim();
     const status = document.getElementById('copy-status');
-    const button = document.getElementById('btn-copy-card');
+    const btn = document.getElementById('btn-copy-card');
     try {
-        if (navigator.clipboard && window.isSecureContext) {
-            await navigator.clipboard.writeText(number);
-        } else {
-            const field = document.createElement('textarea');
-            field.value = number;
-            field.setAttribute('readonly', '');
-            field.style.position = 'fixed';
-            field.style.opacity = '0';
-            document.body.appendChild(field);
-            field.select();
-            const copied = document.execCommand('copy');
-            field.remove();
-            if (!copied) throw new Error('El dispositivo no permitió copiar el número.');
-        }
-        status.textContent = 'Número copiado.';
-        button.textContent = 'Copiado';
-    } catch (error) {
-        console.error('No se pudo copiar el número de tarjeta:', error);
-        status.textContent = 'No se pudo copiar automáticamente. Mantén pulsado el número para copiarlo.';
-        button.textContent = 'Reintentar';
-    }
+        await navigator.clipboard.writeText(num);
+        status.textContent = 'Copiado.'; btn.textContent = 'Copiado';
+    } catch { status.textContent = 'Mantén pulsado para copiar.'; btn.textContent = 'Reintentar'; }
 }
 
 function guardarEventoGoogleCalendar() {
     if (!eventoSeleccionado) return;
-    const date = obtenerFechaDia(eventoSeleccionado.weekTitle || '', eventoSeleccionado.day.fecha || '');
-    if (!date) {
-        document.getElementById('calendar-status').textContent = 'No se pudo interpretar la fecha de este bloque; revisa el cronograma antes de guardarlo.';
-        return;
-    }
-    const time = obtenerRangoHorario(eventoSeleccionado.block.hora || '');
-    const start = new Date(date);
-    const end = new Date(date);
+    const date = obtenerFechaDia(eventoSeleccionado.weekTitle, eventoSeleccionado.day.fecha);
+    if (!date) { document.getElementById('calendar-status').textContent = 'Fecha inválida.'; return; }
+    const time = obtenerRangoHorario(eventoSeleccionado.block.hora);
+    const start = new Date(date); const end = new Date(date);
     start.setHours(time.startHour, time.startMinute, 0, 0);
-    end.setDate(end.getDate() + time.endDayOffset);
-    end.setHours(time.endHour, time.endMinute, 0, 0);
-    const details = `${fraseSeleccionada ? `${fraseSeleccionada}\n\n` : ''}Circuito C-${circuitoActual}. Estado: ${eventoSeleccionado.block.estado || 'apagón'}. Horario publicado sujeto a cambios.`;
-    const params = new URLSearchParams({
-        action: 'TEMPLATE',
-        text: `Horario de apagón · C-${circuitoActual}`,
-        dates: `${formatoGoogleDate(start)}/${formatoGoogleDate(end)}`,
-        details
-    });
+    end.setDate(end.getDate() + time.endDayOffset); end.setHours(time.endHour, time.endMinute, 0, 0);
+    const details = `${fraseSeleccionada}\nCircuito C-${circuitoActual}.`;
+    const params = new URLSearchParams({ action: 'TEMPLATE', text: `Apagón C-${circuitoActual}`, dates: `${formatoGoogleDate(start)}/${formatoGoogleDate(end)}`, details });
     window.open(`https://calendar.google.com/calendar/render?${params.toString()}`, '_blank');
 }
 
 function exportarMesICS() {
-    if (!circuitoActual || !horariosData[circuitoActual]) {
-        setPushStatus('Selecciona un circuito para exportar su cronograma.');
-        return;
-    }
-    const now = new Date();
-    const events = obtenerEventosMes(now.getFullYear(), now.getMonth())
-        .filter((entry) => entry.block.estado === 'apagon');
-    if (!events.length) {
-        setPushStatus('No hay apagones con fecha concreta para exportar en este mes.');
-        return;
-    }
-    const stamp = formatoUTC(new Date());
-    const lines = [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//Apagonia CFG//Horarios de apagones//ES',
-        'CALSCALE:GREGORIAN',
-        'METHOD:PUBLISH'
-    ];
-    events.forEach((entry, index) => {
-        const range = obtenerRangoHorario(entry.block.hora || '');
-        const start = new Date(entry.date);
-        const end = new Date(entry.date);
-        start.setHours(range.startHour, range.startMinute, 0, 0);
-        end.setDate(end.getDate() + range.endDayOffset);
-        end.setHours(range.endHour, range.endMinute, 0, 0);
-        lines.push(
-            'BEGIN:VEVENT',
-            `UID:${fechaISO(entry.date)}-${circuitoActual}-${index}@apagonia-cfg`,
-            `DTSTAMP:${stamp}`,
-            `DTSTART:${formatoLocalICS(start)}`,
-            `DTEND:${formatoLocalICS(end)}`,
-            `SUMMARY:${escaparICS(`Apagón · C-${circuitoActual}`)}`,
-            `DESCRIPTION:${escaparICS(`${entry.block.hora || 'Horario'} · ${entry.day.fecha || ''}. Confirma la vigencia del cronograma.`)}`,
-            'END:VEVENT'
-        );
-    });
-    lines.push('END:VCALENDAR');
-    const dataUri = `data:text/calendar;charset=utf-8,${encodeURIComponent(lines.join('\r\n'))}`;
-    window.location.href = dataUri;
-}
-
-function obtenerEventosMes(year, month) {
-    const circuit = horariosData[circuitoActual];
+    if (!circuitoActual || !horariosData[circuitoActual]) return;
     const events = [];
-    if (!circuit || !Array.isArray(circuit.semanas)) return events;
-    circuit.semanas.forEach((week) => {
-        (Array.isArray(week.dias) ? week.dias : []).forEach((day) => {
-            const date = obtenerFechaDia(week.titulo || '', day.fecha || '');
-            if (!date || date.getFullYear() !== year || date.getMonth() !== month) return;
-            (Array.isArray(day.bloques) ? day.bloques : []).forEach((block) => events.push({ date, day, block }));
-        });
+    horariosData[circuitoActual].semanas.forEach(w => (w.dias||[]).forEach(d => {
+        const date = obtenerFechaDia(w.titulo, d.fecha);
+        if (date) (d.bloques||[]).forEach(b => { if (b.estado === 'apagon') events.push({ date, block: b }); });
+    }));
+    if (!events.length) { setPushStatus('No hay apagones para exportar.'); return; }
+    
+    let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Apagonia CFG//ES\n";
+    events.forEach((e, i) => {
+        const range = obtenerRangoHorario(e.block.hora);
+        const s = new Date(e.date); const en = new Date(e.date);
+        s.setHours(range.startHour, range.startMinute, 0, 0);
+        en.setDate(en.getDate() + range.endDayOffset); en.setHours(range.endHour, range.endMinute, 0, 0);
+        ics += `BEGIN:VEVENT\nUID:${fechaISO(e.date)}-${i}@apagonia\nDTSTART:${formatoLocalICS(s)}\nDTEND:${formatoLocalICS(en)}\nSUMMARY:Apagón C-${circuitoActual}\nEND:VEVENT\n`;
     });
-    return events;
+    ics += "END:VCALENDAR";
+    window.location.href = `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
 }
 
 function obtenerFechaDia(weekTitle, dayLabel) {
-    const label = normalizarTexto(dayLabel);
-    const dayMatch = String(dayLabel).match(/\b(\d{1,2})\b/);
-    const title = normalizarTexto(weekTitle);
+    const label = dayLabel.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    const title = weekTitle.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    const dayMatch = label.match(/\b(\d{1,2})\b/);
     const rangeStart = title.match(/^\s*(\d{1,2})\b/);
     const dayNumber = Number(dayMatch ? dayMatch[1] : label.includes('toda la semana') && rangeStart ? rangeStart[1] : NaN);
     if (dayNumber < 1 || dayNumber > 31) return null;
+    
     const monthMatches = [];
     Object.entries(MONTHS).forEach(([name, index]) => {
         const match = new RegExp(`\\b${name}\\b`, 'g');
@@ -722,29 +427,21 @@ function obtenerFechaDia(weekTitle, dayLabel) {
         while ((found = match.exec(title))) monthMatches.push({ index, position: found.index });
     });
     monthMatches.sort((a, b) => a.position - b.position);
-    const now = new Date();
-    let month = now.getMonth();
-    let year = now.getFullYear();
+    
+    const now = new Date(); let month = now.getMonth(); let year = now.getFullYear();
     if (monthMatches.length > 1) {
-        const rangeStart = title.match(/(\d{1,2})\s+(?:de\s+)?[a-z]+\s+(?:al|a)\s+(\d{1,2})\s+(?:de\s+)?[a-z]+/);
+        const range = title.match(/(\d{1,2})\s+(?:de\s+)?[a-z]+\s+(?:al|a)\s+(\d{1,2})\s+(?:de\s+)?[a-z]+/);
         const firstMonth = monthMatches[0];
         const secondMonth = monthMatches[monthMatches.length - 1];
-        const firstDay = rangeStart ? Number(rangeStart[1]) : 1;
+        const firstDay = range ? Number(range[1]) : 1;
         month = dayNumber >= firstDay ? firstMonth.index : secondMonth.index;
     } else if (monthMatches.length === 1) {
         month = monthMatches[0].index;
     } else if (title.includes('siguiente') && dayNumber <= 7) {
         month += 1;
     }
-    if (month > 11) {
-        month -= 12;
-        year += 1;
-    }
+    if (month > 11) { month -= 12; year += 1; }
     return new Date(year, month, dayNumber);
-}
-
-function normalizarTexto(value) {
-    return String(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 }
 
 function obtenerRangoHorario(value) {
@@ -753,38 +450,16 @@ function obtenerRangoHorario(value) {
     if (!match) return { startHour: 0, startMinute: 0, endHour: 23, endMinute: 59, endDayOffset: 0 };
     const start = convertirHora(match[1], match[2], match[3]);
     const end = convertirHora(match[4], match[5], match[6]);
-    let endDayOffset = 0;
-    if (end.hour < start.hour || (end.hour === start.hour && end.minute <= start.minute)) endDayOffset = 1;
-    return { startHour: start.hour, startMinute: start.minute, endHour: end.hour, endMinute: end.minute, endDayOffset };
+    const offset = (end.hour < start.hour || (end.hour === start.hour && end.minute <= start.minute)) ? 1 : 0;
+    return { startHour: start.hour, startMinute: start.minute, endHour: end.hour, endMinute: end.minute, endDayOffset: offset };
 }
 
-function convertirHora(hourValue, minuteValue, meridiem) {
-    let hour = Number(hourValue) % 24;
-    const minute = Number(minuteValue || 0);
-    if (meridiem) {
-        const suffix = meridiem.toUpperCase();
-        hour %= 12;
-        if (suffix === 'PM') hour += 12;
-    }
+function convertirHora(h, m, mer) {
+    let hour = Number(h) % 24; const minute = Number(m || 0);
+    if (mer) { hour %= 12; if (mer.toUpperCase() === 'PM') hour += 12; }
     return { hour, minute };
 }
 
-function fechaISO(date) {
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-}
-
-function formatoGoogleDate(date) {
-    return `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}T${String(date.getHours()).padStart(2, '0')}${String(date.getMinutes()).padStart(2, '0')}00`;
-}
-
-function formatoLocalICS(date) {
-    return formatoGoogleDate(date);
-}
-
-function formatoUTC(date) {
-    return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
-}
-
-function escaparICS(value) {
-    return String(value).replace(/\\/g, '\\\\').replace(/\r?\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
-}
+function fechaISO(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+function formatoGoogleDate(d) { return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}T${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}00`; }
+function formatoLocalICS(d) { return formatoGoogleDate(d); }

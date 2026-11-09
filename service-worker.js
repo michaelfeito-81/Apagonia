@@ -1,4 +1,4 @@
-const CACHE_NAME = 'apagonia-cfg-v4';
+const CACHE_NAME = 'apagonia-cfg-v6'; // ⚠️ Sube este número (v7, v8...) si haces cambios
 const APP_FILES = [
     './',
     './index.html',
@@ -13,14 +13,19 @@ const APP_FILES = [
 ];
 const DATA_FILES = new Set(['horarios.json', 'frases.json', 'version.json']);
 
+// Cargar OneSignal para notificaciones en segundo plano
 try {
     importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');
 } catch (error) {
-    console.error('No se pudo cargar el componente de OneSignal para el service worker:', error);
+    console.error('No se pudo cargar el componente de OneSignal:', error);
 }
 
 self.addEventListener('install', (event) => {
-    event.waitUntil(precacheApp().then(() => self.skipWaiting()));
+    event.waitUntil(
+        precacheApp()
+            .then(() => self.skipWaiting())
+            .catch((error) => console.error('Error al precachear:', error))
+    );
 });
 
 self.addEventListener('activate', (event) => {
@@ -37,7 +42,10 @@ self.addEventListener('fetch', (event) => {
     const request = event.request;
     if (request.method !== 'GET') return;
     const url = new URL(request.url);
+    
+    // Ignorar peticiones externas (como OneSignal o Google Calendar)
     if (url.origin !== self.location.origin) return;
+    
     const fileName = url.pathname.split('/').pop();
     if (DATA_FILES.has(fileName)) {
         event.respondWith(networkFirst(request));
