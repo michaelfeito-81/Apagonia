@@ -24,17 +24,8 @@ document.addEventListener('DOMContentLoaded', iniciarApp);
 async function iniciarApp() {
     enlazarEventos();
     aplicarPreferencias();
-    window.addEventListener('onesignal-ready', actualizarEstadoPush);
-    window.addEventListener('onesignal-error', () => {
-        setPushStatus('No se pudo conectar con el servicio de notificaciones. Comprueba tu conexión e inténtalo de nuevo.');
-        document.getElementById('btn-enable-push').disabled = false;
-    });
     await Promise.all([registrarServiceWorker(), cargarDatosJSON(), cargarVersion()]);
     renderizarHorarioIfNeeded();
-    if (window.apagoniaOneSignal) actualizarEstadoPush();
-    if (window.apagoniaOneSignalError) {
-        setPushStatus('No se pudo conectar con el servicio de notificaciones. Comprueba tu conexión e inténtalo de nuevo.');
-    }
 }
 
 function enlazarEventos() {
@@ -206,7 +197,6 @@ function renderizarLista(container, circuit) {
     container.replaceChildren(fragment);
 }
 
-// --- CALENDARIO CORREGIDO (MULTIMES Y SIN DESBORDAMIENTO) ---
 function renderizarCalendario(container, circuit) {
     const scheduleByDate = new Map();
     const availableMonths = new Set();
@@ -340,31 +330,62 @@ function guardarPreferencia(kind, value) {
     }
 }
 
-function abrirRecordatorios() { actualizarEstadoPush(); toggleModal('modal-recordatorios', true); }
+// --- LÓGICA DE NOTIFICACIONES CON EL BRIDGE DE MEDIAN ---
 
-function actualizarEstadoPush() {
-    const os = window.apagoniaOneSignal;
+function abrirRecordatorios() {
+    setPushStatus('Comprobando estado...');
     const btn = document.getElementById('btn-enable-push');
-    if (!os) { setPushStatus('Notificaciones no disponibles.'); btn.textContent = 'Activar Notificaciones'; return; }
-    const enabled = os.Notifications.permission === true;
-    btn.textContent = enabled ? 'Notificaciones Activadas ✅' : 'Activar Notificaciones';
-    setPushStatus(enabled ? 'Notificaciones activadas.' : 'Permite las notificaciones para recibir avisos.');
+    btn.textContent = 'Activar Notificaciones';
+    btn.disabled = false;
+
+    if (window.median && median.firebaseMessaging) {
+        median.firebaseMessaging.getPermissionStatus({
+            callback: function(result) {
+                if (result.granted) {
+                    setPushStatus('Las notificaciones ya están activadas ✅');
+                    btn.textContent = 'Notificaciones Activadas ✅';
+                    btn.disabled = true;
+                } else {
+                    setPushStatus('Para recibir avisos, activa las notificaciones push.');
+                }
+            }
+        });
+    } else {
+        setPushStatus('Las notificaciones nativas solo están disponibles en la app instalada (APK).');
+        btn.textContent = 'No disponible';
+        btn.disabled = true;
+    }
+    toggleModal('modal-recordatorios', true);
 }
 
 function setPushStatus(m) { const el = document.getElementById('push-status'); if (el) el.textContent = m; }
 
 function activarNotificacionesPush() {
     const btn = document.getElementById('btn-enable-push');
-    if (window.apagoniaOneSignalError) { setPushStatus('Error de conexión.'); return; }
+    
+    if (!window.median || !median.firebaseMessaging) {
+        setPushStatus('Error: El servicio nativo no está disponible.');
+        return;
+    }
+
     btn.disabled = true;
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    window.OneSignalDeferred.push(async (os) => {
-        try {
-            if (os.Notifications.permission === true) { setPushStatus('Ya están activadas.'); return; }
-            await os.Notifications.requestPermission();
-            actualizarEstadoPush();
-        } catch (e) { setPushStatus('Error al solicitar permiso.'); }
-        finally { btn.disabled = false; }
+    setPushStatus('Solicitando permiso...');
+
+    median.firebaseMessaging.requestPermission({
+        callback: function(permission) {
+            btn.disabled = false;
+            if (permission.granted) {
+                setPushStatus('¡Notificaciones activadas! ✅');
+                btn.textContent = 'Notificaciones Activadas ✅';
+                median.firebaseMessaging.register({
+                    callback: function(regResult) {
+                        console.log('Token FCM obtenido:', regResult.token);
+                    }
+                });
+            } else {
+                setPushStatus('No se concedió el permiso. Actívalo desde los ajustes de tu teléfono.');
+            }
+        }
     });
 }
 
