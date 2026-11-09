@@ -33,9 +33,12 @@ async function iniciarApp() {
 }
 
 function enlazarEventos() {
+    // Selección de circuito
     document.querySelectorAll('[data-circuit]').forEach((button) => {
         button.addEventListener('click', () => selectCircuit(button.dataset.circuit));
     });
+
+    // Botones del Header
     document.getElementById('btn-back').addEventListener('click', logout);
     document.getElementById('btn-refresh').addEventListener('click', actualizarDatos);
     document.getElementById('btn-noti').addEventListener('click', abrirRecordatorios);
@@ -43,6 +46,8 @@ function enlazarEventos() {
         syncPreferenceControls();
         toggleModal('modal-ajustes', true);
     });
+
+    // Enlaces y botones varios
     document.getElementById('link-legal-cover').addEventListener('click', () => toggleModal('modal-legal', true));
     document.getElementById('btn-legal').addEventListener('click', () => toggleModal('modal-legal', true));
     document.getElementById('btn-donar').addEventListener('click', () => toggleModal('modal-donar', true));
@@ -52,12 +57,15 @@ function enlazarEventos() {
     document.getElementById('btn-calendar-event').addEventListener('click', guardarEventoGoogleCalendar);
     document.getElementById('btn-news').addEventListener('click', () => toggleModal('modal-novedades', true));
     
+    // Preferencias (Temas y Layout)
     document.querySelectorAll('input[name="theme"]').forEach((input) => {
         input.addEventListener('change', () => guardarPreferencia('theme', input.value));
     });
     document.querySelectorAll('input[name="layout"]').forEach((input) => {
         input.addEventListener('change', () => guardarPreferencia('layout', input.value));
     });
+
+    // Cierre de modales
     document.querySelectorAll('[data-close-modal]').forEach((button) => {
         button.addEventListener('click', () => toggleModal(button.dataset.closeModal, false));
     });
@@ -125,7 +133,10 @@ async function cargarVersion() {
     }
     if (!versionData) return;
     if (versionData.url_telegram) {
-        ['cover-telegram', 'donation-telegram'].forEach(id => { const el = document.getElementById(id); if (el) { el.href = versionData.url_telegram; el.hidden = false; } });
+        ['cover-telegram', 'donation-telegram'].forEach(id => { 
+            const el = document.getElementById(id); 
+            if (el) { el.href = versionData.url_telegram; el.hidden = false; } 
+        });
     }
     if (versionData.history) renderizarHistorial(versionData.history);
     if (compararVersiones(versionData.latest_version, APP_VERSION) > 0 && versionData.url_apk) {
@@ -155,8 +166,13 @@ function compararVersiones(l, r) {
     return 0;
 }
 
-function leerJSONLocal(k) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch { return null; } }
-function setDataStatus(m) { ['cover-data-status', 'data-status'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = m; }); }
+function leerJSONLocal(k) { 
+    try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch { return null; } 
+}
+
+function setDataStatus(m) { 
+    ['cover-data-status', 'data-status'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = m; }); 
+}
 
 async function actualizarDatos() {
     const btn = document.getElementById('btn-refresh');
@@ -166,41 +182,78 @@ async function actualizarDatos() {
     btn.disabled = false; btn.classList.remove('spinning');
 }
 
-function mostrarCover() { document.getElementById('view-cover').classList.add('active'); document.getElementById('view-dashboard').classList.remove('active'); }
-function mostrarDashboard() { document.getElementById('view-cover').classList.remove('active'); document.getElementById('view-dashboard').classList.add('active'); document.getElementById('current-circuit').textContent = circuitoActual; renderizarHorario(); }
-function renderizarHorarioIfNeeded() { if (circuitoActual) mostrarDashboard(); else mostrarCover(); }
-function selectCircuit(id) { circuitoActual = id; localStorage.setItem(STORAGE_KEYS.circuit, id); mostrarDashboard(); }
-function logout() { localStorage.removeItem(STORAGE_KEYS.circuit); circuitoActual = null; mostrarCover(); }
+function mostrarCover() { 
+    document.getElementById('view-cover').classList.add('active'); 
+    document.getElementById('view-dashboard').classList.remove('active'); 
+}
+
+function mostrarDashboard() { 
+    document.getElementById('view-cover').classList.remove('active'); 
+    document.getElementById('view-dashboard').classList.add('active'); 
+    document.getElementById('current-circuit').textContent = circuitoActual; 
+    renderizarHorario(); 
+}
+
+function renderizarHorarioIfNeeded() { 
+    if (circuitoActual) mostrarDashboard(); else mostrarCover(); 
+}
+
+function selectCircuit(id) { 
+    circuitoActual = id; 
+    localStorage.setItem(STORAGE_KEYS.circuit, id); 
+    mostrarDashboard(); 
+}
+
+function logout() { 
+    localStorage.removeItem(STORAGE_KEYS.circuit); 
+    circuitoActual = null; 
+    mostrarCover(); 
+}
 
 function renderizarHorario() {
     const container = document.getElementById('contenedor-horario');
     const circuit = horariosData[circuitoActual];
+    
     if (!circuit || !Array.isArray(circuit.semanas)) {
         container.innerHTML = '<p class="empty-state">No hay datos disponibles.</p>';
         return;
     }
+    
     document.getElementById('current-month').textContent = `Cronograma Completo`;
-    if (localStorage.getItem(STORAGE_KEYS.layout) === 'calendar') renderizarCalendario(container, circuit);
-    else renderizarLista(container, circuit);
+    if (localStorage.getItem(STORAGE_KEYS.layout) === 'calendar') {
+        renderizarCalendario(container, circuit);
+    } else {
+        renderizarLista(container, circuit);
+    }
 }
 
 function renderizarLista(container, circuit) {
     const fragment = document.createDocumentFragment();
     circuit.semanas.forEach(week => {
-        const card = document.createElement('section'); card.className = 'week-card';
+        const card = document.createElement('section'); 
+        card.className = 'week-card';
         card.innerHTML = `<h3 class="week-title">${week.titulo}</h3>`;
+        
         (week.dias || []).forEach(day => {
-            const row = document.createElement('div'); row.className = 'day-row';
+            const row = document.createElement('div'); 
+            row.className = 'day-row';
             row.innerHTML = `<p class="date-label">${day.fecha}</p>`;
-            const bar = document.createElement('div'); bar.className = 'bar-container';
-            (day.bloques || []).forEach(block => bar.appendChild(crearBotonBloque(block, day, week.titulo)));
-            row.appendChild(bar); card.appendChild(row);
+            const bar = document.createElement('div'); 
+            bar.className = 'bar-container';
+            
+            (day.bloques || []).forEach(block => {
+                bar.appendChild(crearBotonBloque(block, day, week.titulo));
+            });
+            
+            row.appendChild(bar); 
+            card.appendChild(row);
         });
         fragment.appendChild(card);
     });
     container.replaceChildren(fragment);
 }
 
+// CALENDARIO CORREGIDO: Muestra todos los meses sin desbordarse
 function renderizarCalendario(container, circuit) {
     const scheduleByDate = new Map();
     const availableMonths = new Set();
@@ -215,6 +268,7 @@ function renderizarCalendario(container, circuit) {
             
             const key = fechaISO(date);
             if (!scheduleByDate.has(key)) scheduleByDate.set(key, []);
+            
             (day.bloques || []).forEach((block) => {
                 scheduleByDate.get(key).push({ block, day, title: week.titulo, date });
             });
@@ -238,13 +292,18 @@ function renderizarCalendario(container, circuit) {
         grid.className = 'calendar-grid';
         
         WEEKDAYS.forEach(w => {
-            const h = document.createElement('div'); h.className = 'calendar-weekday'; h.textContent = w; grid.appendChild(h);
+            const h = document.createElement('div'); 
+            h.className = 'calendar-weekday'; 
+            h.textContent = w; 
+            grid.appendChild(h);
         });
         
         const firstDay = new Date(year, month - 1, 1);
         const offset = (firstDay.getDay() + 6) % 7;
         for (let i = 0; i < offset; i++) {
-            const blank = document.createElement('div'); blank.className = 'calendar-cell is-empty'; grid.appendChild(blank);
+            const blank = document.createElement('div'); 
+            blank.className = 'calendar-cell is-empty'; 
+            grid.appendChild(blank);
         }
         
         const totalDays = new Date(year, month, 0).getDate();
@@ -289,6 +348,7 @@ function crearBotonBloque(block, day, weekTitle, compact = false) {
 function abrirFrase(type, eventData) {
     const options = frasesData[type];
     fraseSeleccionada = '';
+    
     if (Array.isArray(options) && options.length) {
         const phrase = options[Math.floor(Math.random() * options.length)];
         fraseSeleccionada = phrase.autor ? `“${phrase.texto}” — ${phrase.autor}` : `“${phrase.texto}”`;
@@ -298,6 +358,7 @@ function abrirFrase(type, eventData) {
         document.getElementById('frase-texto').textContent = 'Consulta el horario con frecuencia.';
         document.getElementById('frase-autor').textContent = '';
     }
+    
     eventoSeleccionado = eventData;
     const stateLabel = type === 'luz' ? 'Corriente' : type === 'apagon' ? 'Apagón' : 'Servicio 24 h';
     document.getElementById('block-summary').textContent = `${eventData.day.fecha} · ${eventData.block.hora} · ${stateLabel}`;
@@ -334,37 +395,45 @@ function guardarPreferencia(kind, value) {
     }
 }
 
+// --- LÓGICA DE NOTIFICACIONES CON BRIDGE DE MEDIAN ---
 function abrirRecordatorios() {
-    setPushStatus('Comprobando estado...');
     const btn = document.getElementById('btn-enable-push');
-    btn.textContent = 'Activar Notificaciones';
-    btn.disabled = false;
+    btn.textContent = 'Comprobando...';
+    btn.disabled = true;
+    setPushStatus('Verificando estado...');
 
     if (window.median && median.firebaseMessaging) {
         try {
             median.firebaseMessaging.getPermissionStatus({
                 callback: function(result) {
                     if (result && result.granted) {
-                        setPushStatus('Las notificaciones ya están activadas ✅');
+                        setPushStatus('Las notificaciones están activadas en este dispositivo ✅');
                         btn.textContent = 'Notificaciones Activadas ✅';
                         btn.disabled = true;
                     } else {
-                        setPushStatus('Para recibir avisos, activa las notificaciones push.');
+                        setPushStatus('Para recibir avisos, necesitas activar las notificaciones.');
+                        btn.textContent = 'Activar Notificaciones';
+                        btn.disabled = false;
                     }
                 }
             });
         } catch (e) {
-            setPushStatus('No se pudo comprobar el estado. Intenta activar manualmente.');
+            setPushStatus('No se pudo leer el estado. Intenta activar manualmente.');
+            btn.textContent = 'Activar Notificaciones';
+            btn.disabled = false;
         }
     } else {
-        setPushStatus('Las notificaciones nativas solo están disponibles en la app instalada (APK).');
-        btn.textContent = 'No disponible en web';
+        setPushStatus('Las notificaciones solo funcionan en la app instalada (APK).');
+        btn.textContent = 'No disponible en Web';
         btn.disabled = true;
     }
     toggleModal('modal-recordatorios', true);
 }
 
-function setPushStatus(m) { const el = document.getElementById('push-status'); if (el) el.textContent = m; }
+function setPushStatus(m) { 
+    const el = document.getElementById('push-status'); 
+    if (el) el.textContent = m; 
+}
 
 function activarNotificacionesPush() {
     const btn = document.getElementById('btn-enable-push');
@@ -373,14 +442,14 @@ function activarNotificacionesPush() {
         return;
     }
     btn.disabled = true;
-    setPushStatus('Solicitando permiso...');
+    setPushStatus('Solicitando permiso al sistema...');
 
     const timeoutId = setTimeout(() => {
         if (btn.disabled) {
             btn.disabled = false;
             setPushStatus('El sistema no respondió. Revisa los permisos en los ajustes de tu teléfono.');
         }
-    }, 3000);
+    }, 4000);
 
     try {
         median.firebaseMessaging.requestPermission({
@@ -388,16 +457,14 @@ function activarNotificacionesPush() {
                 clearTimeout(timeoutId);
                 btn.disabled = false;
                 if (permission && permission.granted) {
-                    setPushStatus('¡Notificaciones activadas! ✅');
+                    setPushStatus('¡Notificaciones activadas con éxito! ✅');
                     btn.textContent = 'Notificaciones Activadas ✅';
                     btn.disabled = true;
                     median.firebaseMessaging.register({
-                        callback: function(regResult) {
-                            console.log('Token FCM obtenido:', regResult ? regResult.token : 'desconocido');
-                        }
+                        callback: function(res) { console.log('Token:', res ? res.token : 'no token'); }
                     });
                 } else {
-                    setPushStatus('No se concedió el permiso. Actívalo desde los ajustes de tu teléfono.');
+                    setPushStatus('Permiso denegado. Ve a Ajustes > Apps > APAGONIA CFG > Notificaciones para activarlo.');
                 }
             }
         });
@@ -414,23 +481,38 @@ async function copiarNumeroTarjeta() {
     const btn = document.getElementById('btn-copy-card');
     try {
         await navigator.clipboard.writeText(num);
-        status.textContent = 'Copiado.'; btn.textContent = 'Copiado';
-    } catch { status.textContent = 'Mantén pulsado para copiar.'; btn.textContent = 'Reintentar'; }
+        status.textContent = 'Copiado.'; 
+        btn.textContent = 'Copiado';
+    } catch { 
+        status.textContent = 'Mantén pulsado para copiar.'; 
+        btn.textContent = 'Reintentar'; 
+    }
 }
 
 function guardarEventoGoogleCalendar() {
     if (!eventoSeleccionado) return;
     const date = obtenerFechaDia(eventoSeleccionado.weekTitle, eventoSeleccionado.day.fecha);
-    if (!date) { document.getElementById('calendar-status').textContent = 'Fecha inválida.'; return; }
+    if (!date) { 
+        document.getElementById('calendar-status').textContent = 'Fecha inválida.'; 
+        return; 
+    }
     const time = obtenerRangoHorario(eventoSeleccionado.block.hora);
     const start = new Date(date); const end = new Date(date);
     start.setHours(time.startHour, time.startMinute, 0, 0);
-    end.setDate(end.getDate() + time.endDayOffset); end.setHours(time.endHour, time.endMinute, 0, 0);
+    end.setDate(end.getDate() + time.endDayOffset); 
+    end.setHours(time.endHour, time.endMinute, 0, 0);
+    
     const details = `${fraseSeleccionada}\nCircuito C-${circuitoActual}.`;
-    const params = new URLSearchParams({ action: 'TEMPLATE', text: `Apagón C-${circuitoActual}`, dates: `${formatoGoogleDate(start)}/${formatoGoogleDate(end)}`, details });
+    const params = new URLSearchParams({ 
+        action: 'TEMPLATE', 
+        text: `Apagón C-${circuitoActual}`, 
+        dates: `${formatoGoogleDate(start)}/${formatoGoogleDate(end)}`, 
+        details 
+    });
     window.open(`https://calendar.google.com/calendar/render?${params.toString()}`, '_blank');
 }
 
+// --- EXPORTAR .ICS USANDO EL MENÚ DE COMPARTIR NATIVO ---
 function exportarMesICS() {
     if (!circuitoActual || !horariosData[circuitoActual]) {
         setPushStatus('Selecciona un circuito para exportar.');
@@ -457,16 +539,25 @@ function exportarMesICS() {
     });
     ics += "END:VCALENDAR";
 
-    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `Apagonia_C${circuitoActual}.ics`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-    setPushStatus('✅ Archivo descargado. Revisa tus notificaciones o la carpeta de Descargas.');
+    if (window.median && median.share) {
+        median.share.shareData({
+            text: ics,
+            filename: `Apagonia_C${circuitoActual}.ics`,
+            mimeType: 'text/calendar'
+        });
+        setPushStatus('✅ Se abrirá el menú para que guardes o compartas el archivo.');
+    } else {
+        const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Apagonia_C${circuitoActual}.ics`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        setPushStatus('✅ Archivo descargado. Revisa la carpeta de Descargas.');
+    }
 }
 
 function obtenerFechaDia(weekTitle, dayLabel) {
