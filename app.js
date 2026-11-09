@@ -412,25 +412,46 @@ function guardarEventoGoogleCalendar() {
     window.open(`https://calendar.google.com/calendar/render?${params.toString()}`, '_blank');
 }
 
+// --- EXPORTACIÓN .ICS ARREGLADA (SIN DATA URI) ---
 function exportarMesICS() {
-    if (!circuitoActual || !horariosData[circuitoActual]) return;
+    if (!circuitoActual || !horariosData[circuitoActual]) {
+        setPushStatus('Selecciona un circuito para exportar.');
+        return;
+    }
+    
     const events = [];
     horariosData[circuitoActual].semanas.forEach(w => (w.dias||[]).forEach(d => {
         const date = obtenerFechaDia(w.titulo, d.fecha);
         if (date) (d.bloques||[]).forEach(b => { if (b.estado === 'apagon') events.push({ date, block: b }); });
     }));
-    if (!events.length) { setPushStatus('No hay apagones para exportar.'); return; }
+
+    if (!events.length) { 
+        setPushStatus('No hay apagones programados para exportar.'); 
+        return; 
+    }
     
-    let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Apagonia CFG//ES\n";
+    let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Apagonia CFG//ES\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\n";
     events.forEach((e, i) => {
         const range = obtenerRangoHorario(e.block.hora);
         const s = new Date(e.date); const en = new Date(e.date);
         s.setHours(range.startHour, range.startMinute, 0, 0);
         en.setDate(en.getDate() + range.endDayOffset); en.setHours(range.endHour, range.endMinute, 0, 0);
-        ics += `BEGIN:VEVENT\nUID:${fechaISO(e.date)}-${i}@apagonia\nDTSTART:${formatoLocalICS(s)}\nDTEND:${formatoLocalICS(en)}\nSUMMARY:Apagón C-${circuitoActual}\nEND:VEVENT\n`;
+        ics += `BEGIN:VEVENT\nUID:${fechaISO(e.date)}-${i}@apagonia\nDTSTAMP:${formatoLocalICS(new Date())}\nDTSTART:${formatoLocalICS(s)}\nDTEND:${formatoLocalICS(en)}\nSUMMARY:Apagón C-${circuitoActual}\nEND:VEVENT\n`;
     });
     ics += "END:VCALENDAR";
-    window.location.href = `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
+
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    
+    link.href = url;
+    link.download = `Apagonia_C${circuitoActual}.ics`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+    
+    setPushStatus('✅ Archivo descargado. Revisa tus notificaciones o la carpeta de Descargas.');
 }
 
 function obtenerFechaDia(weekTitle, dayLabel) {
