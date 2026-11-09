@@ -1,40 +1,20 @@
-const CACHE_NAME = 'apagonia-cfg-v6'; // ⚠️ Sube este número (v7, v8...) si haces cambios
+const CACHE_NAME = 'apagonia-cfg-v8'; // Sube este número si haces nuevos cambios
 const APP_FILES = [
-    './',
-    './index.html',
-    './styles.css',
-    './app.js',
-    './manifest.webmanifest',
-    './images.png',
-    './qr.jpg',
-    './horarios.json',
-    './frases.json',
-    './version.json'
+    './', './index.html', './styles.css', './app.js', './manifest.webmanifest',
+    './images.png', './qr.jpg', './horarios.json', './frases.json', './version.json'
 ];
 const DATA_FILES = new Set(['horarios.json', 'frases.json', 'version.json']);
 
-// Cargar OneSignal para notificaciones en segundo plano
-try {
-    importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');
-} catch (error) {
-    console.error('No se pudo cargar el componente de OneSignal:', error);
-}
-
 self.addEventListener('install', (event) => {
-    event.waitUntil(
-        precacheApp()
-            .then(() => self.skipWaiting())
-            .catch((error) => console.error('Error al precachear:', error))
-    );
+    event.waitUntil(precacheApp().then(() => self.skipWaiting()).catch(err => console.error('Error:', err)));
 });
 
 self.addEventListener('activate', (event) => {
     event.waitUntil(
-        caches.keys()
-            .then((keys) => Promise.all(keys
-                .filter((key) => key.startsWith('apagonia-cfg-') && key !== CACHE_NAME)
-                .map((key) => caches.delete(key))))
-            .then(() => self.clients.claim())
+        caches.keys().then((keys) => Promise.all(
+            keys.filter((key) => key.startsWith('apagonia-cfg-') && key !== CACHE_NAME)
+                .map((key) => caches.delete(key))
+        )).then(() => self.clients.claim())
     );
 });
 
@@ -42,8 +22,6 @@ self.addEventListener('fetch', (event) => {
     const request = event.request;
     if (request.method !== 'GET') return;
     const url = new URL(request.url);
-    
-    // Ignorar peticiones externas (como OneSignal o Google Calendar)
     if (url.origin !== self.location.origin) return;
     
     const fileName = url.pathname.split('/').pop();
@@ -93,9 +71,5 @@ async function cacheFirst(request, fallbackPath) {
 function withOfflineHeader(response) {
     const headers = new Headers(response.headers);
     headers.set('X-Offline-Cache', 'true');
-    return new Response(response.body, {
-        status: response.status,
-        statusText: response.statusText,
-        headers
-    });
+    return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 }
