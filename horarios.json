@@ -5,13 +5,13 @@
       {
         "titulo": "06 al 12",
         "dias": [
-          { "fecha": "Viernes 06", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Viernes 06", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
           { "fecha": "Sábado 07", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
-          { "fecha": "Domingo 08", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
-          { "fecha": "Lunes 09", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
-          { "fecha": "Martes 10", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
-          { "fecha": "Miércoles 11", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
-          { "fecha": "Jueves 12", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] }
+          { "fecha": "Domingo 08", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Lunes 09", "bloques": [ { "hora": "12AM-8AM", "estado": "luz" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Martes 10", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] },
+          { "fecha": "Miércoles 11", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "luz" }, { "hora": "4PM-12AM", "estado": "apagon" } ] },
+          { "fecha": "Jueves 12", "bloques": [ { "hora": "12AM-8AM", "estado": "apagon" }, { "hora": "8AM-4PM", "estado": "apagon" }, { "hora": "4PM-12AM", "estado": "luz" } ] }
         ]
       },
       {
