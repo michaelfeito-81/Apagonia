@@ -9,27 +9,6 @@
     <link rel="icon" type="image/png" href="images.png">
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="stylesheet" href="styles.css">
-    
-    <!-- ONE SIGNAL SDK -->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        OneSignalDeferred.push(async function (OneSignal) {
-            try {
-                await OneSignal.init({
-                    appId: 'a5e2e4bf-ec0d-4aeb-a661-ff8a346575a0',
-                    serviceWorkerPath: './service-worker.js',
-                    serviceWorkerParam: { scope: './' }
-                });
-                window.apagoniaOneSignal = OneSignal;
-                window.dispatchEvent(new Event('onesignal-ready'));
-            } catch (error) {
-                console.error('No se pudo inicializar OneSignal:', error);
-                window.apagoniaOneSignalError = true;
-                window.dispatchEvent(new Event('onesignal-error'));
-            }
-        });
-    </script>
 </head>
 <body>
     <div class="bg-glow" aria-hidden="true"></div>
@@ -99,8 +78,8 @@
     <div id="modal-recordatorios" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="recordatorios-title">
         <div class="glass-modal">
             <h3 id="recordatorios-title">🔔 Notificaciones</h3>
-            <p class="modal-desc">Para recibir avisos de Apagonía, activa las notificaciones push y permite los avisos cuando el teléfono lo solicite.</p>
-            <p id="push-status" class="helper-text" role="status" aria-live="polite">Comprobando el estado de las notificaciones…</p>
+            <p class="modal-desc">Activa las notificaciones push para recibir avisos importantes sobre los apagones.</p>
+            <p id="push-status" class="helper-text" role="status" aria-live="polite">Comprobando el estado…</p>
             <button id="btn-enable-push" class="btn-primary" type="button">Activar Notificaciones</button>
             <button id="btn-export-month-push" class="btn-secondary" type="button">Exportar TODO el mes a Google Calendar</button>
             <button class="btn-secondary" type="button" data-close-modal="modal-recordatorios">Cerrar</button>
@@ -143,11 +122,11 @@
             </section>
             <section class="legal-section">
                 <h4>Origen y vigencia de la información</h4>
-                <p>Los horarios se muestran según los datos disponibles en la aplicación, que pueden provenir de terceros. No somos proveedores ni verificadores oficiales de esa información, ni participamos en la planificación o ejecución del servicio eléctrico. Los datos pueden estar incompletos, desactualizados o cambiar sin previo aviso. Confirma siempre el horario por los canales oficiales antes de tomar decisiones.</p>
+                <p>Los horarios se muestran según los datos disponibles en la aplicación, que pueden provenir de terceros. No somos proveedores ni verificadores oficiales de esa información. Los datos pueden estar incompletos, desactualizados o cambiar sin previo aviso.</p>
             </section>
             <section class="legal-section">
                 <h4>Alcance de responsabilidad</h4>
-                <p>La aplicación se ofrece con fines informativos y sin garantía de exactitud, disponibilidad o actualización continua. En la medida permitida por la legislación aplicable, sus responsables no asumen responsabilidad por errores u omisiones en los datos, interrupciones del servicio, decisiones tomadas basándose en la aplicación ni daños derivados de su uso.</p>
+                <p>La aplicación se ofrece con fines informativos y sin garantía de exactitud, disponibilidad o actualización continua. No asumimos responsabilidad por decisiones tomadas basándose en la aplicación ni daños derivados de su uso.</p>
             </section>
             <button class="btn-secondary" type="button" data-close-modal="modal-legal">Cerrar</button>
         </div>
