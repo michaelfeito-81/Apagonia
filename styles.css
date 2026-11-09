@@ -9,9 +9,11 @@
     --accent: #c084fc;
     --text-main: #f8fafc;
     --text-muted: #a8b5c7;
-    --color-luz: #10b981;
-    --color-apagon: #ef4444;
-    --color-milagro: #f59e0b;
+    
+    /* NUEVA PALETA: Azul eléctrico para Luz, Naranja cálido para Apagón */
+    --color-luz: #0ea5e9; 
+    --color-apagon: #f97316; 
+    --color-milagro: #eab308; 
 }
 
 :root[data-theme="light"] {
@@ -25,9 +27,10 @@
     --accent: #475569;
     --text-main: #0f172a;
     --text-muted: #64748b;
-    --color-luz: #059669;
-    --color-apagon: #dc2626;
-    --color-milagro: #d97706;
+    
+    --color-luz: #0284c7; /* Azul más oscuro para contraste en fondo claro */
+    --color-apagon: #ea580c; /* Naranja oscuro */
+    --color-milagro: #ca8a04; 
 }
 
 :root[data-theme="sport"] {
@@ -41,9 +44,10 @@
     --accent: #fbbf24;
     --text-main: #f5f5f4;
     --text-muted: #a8a29e;
-    --color-luz: #22c55e;
-    --color-apagon: #ef4444;
-    --color-milagro: #fbbf24;
+    
+    --color-luz: #06b6d4; /* Cian vibrante */
+    --color-apagon: #f43f5e; /* Rosa profundo (energía) */
+    --color-milagro: #facc15;
 }
 
 :root[data-theme="girl"] {
@@ -57,9 +61,10 @@
     --accent: #9333ea;
     --text-main: #831843;
     --text-muted: #9d174d;
-    --color-luz: #10b981;
-    --color-apagon: #f43f5e;
-    --color-milagro: #f59e0b;
+    
+    --color-luz: #2dd4bf; /* Menta suave */
+    --color-apagon: #ec4899; /* Rosa vibrante */
+    --color-milagro: #fbbf24;
 }
 
 :root[data-theme="funny"] {
@@ -73,9 +78,10 @@
     --accent: #10b981;
     --text-main: #1e3a8a;
     --text-muted: #1d4ed8;
-    --color-luz: #10b981;
-    --color-apagon: #ef4444;
-    --color-milagro: #f59e0b;
+    
+    --color-luz: #3b82f6; /* Azul brillante */
+    --color-apagon: #f97316; /* Naranja brillante */
+    --color-milagro: #10b981; /* Verde brillante */
 }
 
 :root[data-theme="contrast"] {
@@ -89,13 +95,14 @@
     --accent: #0ff;
     --text-main: #fff;
     --text-muted: #fff;
-    --color-luz: #00ff80;
-    --color-apagon: #ff4141;
-    --color-milagro: #ff0;
+    
+    --color-luz: #00ffff; /* Cian puro */
+    --color-apagon: #ff00ff; /* Magenta puro */
+    --color-milagro: #ffff00; /* Amarillo puro */
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-body { min-height: 100dvh; overflow-x: hidden; background: var(--bg-darker); color: var(--text-main); }
+body { min-height: 100vh; min-height: 100dvh; overflow-x: hidden; background: var(--bg-darker); color: var(--text-main); }
 button, a, input { font: inherit; }
 button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; }
 
@@ -108,14 +115,15 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .update-banner[hidden] { display: none; }
 .update-banner a, .update-banner button { color: inherit; font-weight: 800; border: 0; background: transparent; text-decoration: underline; cursor: pointer; }
 
-.view { display: none; min-height: 100dvh; padding: calc(16px + env(safe-area-inset-top)) 20px calc(88px + env(safe-area-inset-bottom)); animation: fade-in 0.3s ease; }
+.view { display: none; min-height: 100vh; min-height: 100dvh; padding: calc(16px + env(safe-area-inset-top)) 20px calc(88px + env(safe-area-inset-bottom)); animation: fade-in 0.3s ease; }
 .view.active { display: block; }
 
-.cover-content { display: flex; min-height: 82dvh; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.cover-content { display: flex; min-height: 82vh; min-height: 82dvh; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 .icon-bolt { font-size: 58px; filter: drop-shadow(0 0 15px var(--primary)); animation: pulse 2s infinite; }
 .gradient-text { margin: 10px 0; background: linear-gradient(135deg, var(--primary), var(--accent)); background-clip: text; color: transparent; font-size: clamp(32px, 9vw, 44px); font-weight: 850; }
 .subtitle { margin-bottom: 25px; color: var(--text-muted); }
 .data-status { margin-top: 7px; color: var(--text-muted); font-size: 12px; line-height: 1.45; }
+.schedule-disclaimer { margin-top: 8px; color: var(--text-muted); font-size: 10px; line-height: 1.45; max-width: 430px; margin-bottom: 22px; }
 .circuit-grid { display: grid; width: min(100%, 350px); grid-template-columns: repeat(2, 1fr); gap: 14px; }
 .circuit-btn { padding: 20px; border: 1px solid var(--glass-border); border-radius: 16px; background: var(--glass); color: var(--text-main); font-size: 20px; font-weight: 700; cursor: pointer; backdrop-filter: blur(10px); }
 .circuit-btn:active { transform: scale(0.97); background: var(--primary); color: var(--bg-darker); }
@@ -137,14 +145,15 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .date-label { margin-bottom: 5px; padding-left: 4px; color: var(--text-main); font-size: 13px; font-weight: 700; }
 .bar-container { display: flex; min-height: 48px; overflow: hidden; border-radius: 11px; background: rgba(0, 0, 0, 0.18); }
 .segment { display: flex; min-width: 0; flex: 1; flex-direction: column; align-items: center; justify-content: center; padding: 5px 2px; border: 0; border-right: 1px solid rgba(0,0,0,0.25); color: #fff; font-size: 10px; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.6); cursor: pointer; }
+
+/* Aplicación de los nuevos colores */
 .segment.luz, .calendar-block.luz { background: var(--color-luz); }
 .segment.apagon, .calendar-block.apagon { background: var(--color-apagon); }
 .segment.milagro, .calendar-block.milagro { background: var(--color-milagro); color: #1c1917; }
 
-/* --- VISTA CALENDARIO CORREGIDA (SIN DESBORDAMIENTO) --- */
-.layout-calendar { display: flex; flex-direction: column; gap: 20px; }
+.layout-calendar { display: flex; flex-direction: column; gap: 20px; width: 100%; }
 .calendar-month-container { width: 100%; }
-.calendar-month-title { text-align: center; color: var(--primary); font-size: 14px; margin-bottom: 10px; text-transform: uppercase; }
+.calendar-month-title { text-align: center; color: var(--primary); font-size: 14px; margin-bottom: 10px; text-transform: uppercase; font-weight: 800; }
 .calendar-grid { display: grid; width: 100%; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; }
 .calendar-weekday { padding: 5px 0; color: var(--text-muted); font-size: 10px; font-weight: 800; text-align: center; }
 .calendar-cell { min-height: 70px; padding: 3px 2px; overflow: hidden; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--glass); }
@@ -180,6 +189,8 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .history-entry ul { padding-left: 20px; }
 .legal-modal { text-align: left; }
 .legal-modal h3 { text-align: center; }
+.legal-section { margin: 14px 0; }
+.legal-section h4 { margin-bottom: 5px; color: var(--primary); font-size: 14px; }
 .legal-section p { color: var(--text-muted); font-size: 13px; line-height: 1.55; }
 
 .donation-details { margin-bottom: 14px; padding: 12px; border: 1px dashed var(--text-muted); border-radius: 12px; background: rgba(127,127,127,0.08); font-size: 13px; text-align: left; }
@@ -190,4 +201,3 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .copy-status { min-height: 18px; color: var(--primary); font-size: 12px; }
 .donation-qr { display: block; width: min(100%, 280px); height: auto; margin: 0 auto; border-radius: 8px; background: #fff; }
 .loader { margin-top: 50px; color: var(--primary); font-weight: 700; text-align: center; animation: pulse 1.5s infinite; }
-.spinning { animation: rotate-bg 1s linear infinite; }
